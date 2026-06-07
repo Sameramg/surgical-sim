@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SCALPEL — surgical decision trainer</title>
+  <style>
+    :root {
+      --bg: #0e1113; --panel: #161a1d; --panel2: #1d2226; --line: #2a3137;
+      --ink: #e7edf0; --dim: #8c9aa3; --accent: #d98a5b; --good: #5bb98a;
+      --bad: #d9685b; --warn: #d9b85b;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; background: var(--bg); color: var(--ink);
+      font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 28px 20px 80px; }
+    h1 { font-size: 20px; letter-spacing: .14em; font-weight: 700; margin: 0; }
+    .sub { color: var(--dim); font-size: 13px; margin-top: 4px; }
+    .bar { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
+    .skills { display: flex; gap: 8px; flex-wrap: wrap; margin: 14px 0 22px; }
+    .chip {
+      background: var(--panel2); border: 1px solid var(--line); color: var(--dim);
+      padding: 5px 11px; border-radius: 999px; cursor: pointer; font-size: 13px;
+    }
+    .chip.on { color: var(--ink); border-color: var(--accent); }
+    .card { background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 20px; }
+    .meta { display: flex; justify-content: space-between; color: var(--dim); font-size: 12px;
+            text-transform: uppercase; letter-spacing: .1em; margin-bottom: 12px; }
+    .rating { font-variant-numeric: tabular-nums; }
+    .stem { font-size: 16px; margin: 6px 0 18px; }
+    .opt {
+      display: block; width: 100%; text-align: left; background: var(--panel2);
+      border: 1px solid var(--line); color: var(--ink); padding: 13px 15px;
+      border-radius: 9px; margin-bottom: 9px; cursor: pointer; font: inherit;
+      transition: border-color .12s, background .12s;
+    }
+    .opt:hover:not(:disabled) { border-color: var(--accent); }
+    .opt:disabled { cursor: default; opacity: .55; }
+    .opt.picked { border-color: var(--accent); }
+    .opt.best { border-color: var(--good); }
+    .opt.bad { border-color: var(--bad); }
+    .verdict { font-weight: 700; letter-spacing: .04em; }
+    .v-optimal { color: var(--good); } .v-bad { color: var(--bad); } .v-mid { color: var(--warn); }
+    .fb { color: var(--dim); margin: 6px 0 0; }
+    .delta-pos { color: var(--good); } .delta-neg { color: var(--bad); }
+    .row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-top: 18px; }
+    button.act {
+      background: var(--accent); border: none; color: #11140f; font-weight: 600;
+      padding: 10px 18px; border-radius: 8px; cursor: pointer; font: inherit;
+    }
+    button.ghost { background: transparent; border: 1px solid var(--line); color: var(--ink);
+                   padding: 10px 16px; border-radius: 8px; cursor: pointer; font: inherit; }
+    .viva { margin-top: 20px; border-top: 1px solid var(--line); padding-top: 16px; }
+    .viva-h { font-size: 12px; text-transform: uppercase; letter-spacing: .12em; color: var(--accent); margin-bottom: 10px; }
+    .msg { margin: 0 0 12px; padding: 11px 13px; border-radius: 9px; white-space: pre-wrap; }
+    .m-examiner { background: var(--panel2); border-left: 3px solid var(--accent); }
+    .m-you { background: #14181b; border-left: 3px solid var(--dim); }
+    .m-role { font-size: 11px; text-transform: uppercase; letter-spacing: .1em; color: var(--dim); margin-bottom: 3px; }
+    .ask { display: flex; gap: 8px; margin-top: 6px; }
+    .ask textarea {
+      flex: 1; resize: vertical; min-height: 44px; background: var(--panel2);
+      border: 1px solid var(--line); color: var(--ink); border-radius: 8px; padding: 10px; font: inherit;
+    }
+    .note { color: var(--dim); font-size: 13px; }
+    .err { color: var(--bad); font-size: 13px; }
+    .cursor::after { content: "▍"; color: var(--accent); animation: blink 1s steps(2) infinite; }
+    @keyframes blink { 0%,50% { opacity: 1; } 50.1%,100% { opacity: 0; } }
+    a { color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

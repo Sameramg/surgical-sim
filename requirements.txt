@@ -1,0 +1,5 @@
+# SCALPEL web UI dependencies.
+# The CLI (play.py) and the test suite need none of these — pure stdlib.
+flask>=3.0
+anthropic>=0.69    # only needed for the live Socratic examiner
+# tests: pytest>=8
