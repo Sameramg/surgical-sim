@@ -22,6 +22,10 @@
 <div id="root"></div>
 <script type="text/babel">
 
+// Snapshot the pristine page source NOW, before React renders into #root.
+// Used by "Download portable copy" to bake current edits into a fresh file.
+var PRISTINE_HTML = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+
 const data = {
   categories: [
     { name: "Situational & Behavioral", count: 90, pct: 38, color: "#534AB7", bg: "#EEEDFE", subgroups: [
@@ -199,11 +203,18 @@ function useFileData() {
   function updateAnswers(fn) { setAnswers(function(prev){ var next = fn(prev); stateRef.current = Object.assign({}, stateRef.current, { answers: next }); scheduleSave(); return next; }); }
   function updateChecked(fn) { setChecked(function(prev){ var next = fn(prev); stateRef.current = Object.assign({}, stateRef.current, { checked: next }); scheduleSave(); return next; }); }
   function updateWrong(fn)   { setWrong(function(prev){   var next = fn(prev); stateRef.current = Object.assign({}, stateRef.current, { wrong: next });   scheduleSave(); return next; }); }
-  return { answers, checked, wrong, updateAnswers, updateChecked, updateWrong };
+  function importAll(d) {
+    var a = d.answers || {}, c = d.checked || {}, w = d.wrong || {};
+    stateRef.current = { answers: a, checked: c, wrong: w };
+    setAnswers(a); setChecked(c); setWrong(w);
+    scheduleSave();
+  }
+  return { answers, checked, wrong, updateAnswers, updateChecked, updateWrong, importAll };
 }
 
 
 // ── Standalone persistence (works as a plain double-clicked file) ──
+/*EMBED_START*/
 const EMBEDDED_DATA = {
   "answers": {
     "0_0_0": "<font style=\"font-size: 16px;\"></font><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-family: -webkit-standard;\"></span><span style=\"font-size: 14px;\">🧭 Principle:</span><span style=\"font-family: -webkit-standard;\"></span><span style=\"\"><br></span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">\"Residency is built on <b>teamwork</b> and <b>mutual</b> <b>support</b> — and if a colleague needed me to cover their on-call during their wedding, I would do so without hesitation.&nbsp;</span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-family: -webkit-standard;\"></span><span style=\"font-size: 14px;\">⚙️ Action:</span><span style=\"font-family: -webkit-standard;\"></span><span style=\"\"><br></span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">I would make sure i go through the endorsements from the teams to make sure things run smoothly.\" (smile)&nbsp;</span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-family: -webkit-standard;\"></span><span style=\"font-size: 14px;\">🎭 Human Moment:</span><span style=\"font-family: -webkit-standard;\"></span><span style=\"\"><br></span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">\"The only downside, of course, is missing the wedding — but I suppose that's what gift registries are for.\"</span></p>",
@@ -292,6 +303,7 @@ const EMBEDDED_DATA = {
     "1_8_0": 1
   }
 };
+/*EMBED_END*/
 const LS_KEY = 'ent_interview_master_v1';
 function lsLoad() {
   try { var raw = localStorage.getItem(LS_KEY); if (raw) return JSON.parse(raw); } catch(e) {}
@@ -805,12 +817,48 @@ function App() {
   var [tab, setTab] = React.useState('spine');
   var [filter, setFilter] = React.useState('all');
   var [quizCenter, setQuizCenter] = React.useState(null);
-  var { answers, checked, wrong: wrongCounts, updateAnswers, updateChecked, updateWrong } = useFileData();
+  var { answers, checked, wrong: wrongCounts, updateAnswers, updateChecked, updateWrong, importAll } = useFileData();
   function onCheck(id) { updateChecked(function(prev){ var n=Object.assign({},prev); n[id]=!prev[id]; return n; }); }
   function onAnswer(id, val) { updateAnswers(function(prev){ var n=Object.assign({},prev); n[id]=val; return n; }); }
   function setWrongCounts(fn) { updateWrong(fn); }
   function handleStartCenterQuiz(center) { setQuizCenter(center); setTab('quiz'); }
   React.useEffect(function(){ if (tab !== 'quiz') setQuizCenter(null); }, [tab]);
+
+  // ── Export / Import ─────────────────────────────────────────
+  var fileInputRef = React.useRef(null);
+  function currentState() { return { answers: answers, checked: checked, wrong: wrongCounts }; }
+  function download(filename, text, mime) {
+    var blob = new Blob([text], { type: mime || 'text/plain' });
+    var url = URL.createObjectURL(blob);
+    var a = document.createElement('a'); a.href = url; a.download = filename;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a);
+    setTimeout(function(){ URL.revokeObjectURL(url); }, 1000);
+  }
+  function exportJson() {
+    download('ent_answers.json', JSON.stringify(currentState(), null, 2), 'application/json');
+  }
+  function exportHtml() {
+    // Bake the current edits into a fresh copy of this file, so the new HTML
+    // literally carries the content with it — open it anywhere, edits included.
+    var baked = '/*EMBED_START*/\nconst EMBEDDED_DATA = ' + JSON.stringify(currentState(), null, 2) + ';\n/*EMBED_END*/';
+    var out = PRISTINE_HTML.replace(/\/\*EMBED_START\*\/[\s\S]*?\/\*EMBED_END\*\//, baked);
+    download('ent_interview_master.html', out, 'text/html');
+  }
+  function onImportFile(e) {
+    var file = e.target.files && e.target.files[0];
+    if (!file) return;
+    var reader = new FileReader();
+    reader.onload = function() {
+      try {
+        var parsed = JSON.parse(reader.result);
+        if (!window.confirm('Replace your current answers with the imported file?')) return;
+        importAll(parsed);
+      } catch (err) { window.alert('That file is not valid answers JSON.'); }
+    };
+    reader.readAsText(file);
+    e.target.value = '';
+  }
+  var ioBtn = { padding: '6px 11px', borderRadius: 8, border: '1.5px solid #e0ddd5', background: '#fff', color: '#555', fontWeight: 600, fontSize: 12.5, cursor: 'pointer', whiteSpace: 'nowrap' };
 
   var tabs = [['spine','🧭 Spine'],['portfolio','🗺 Portfolio'],['study','📚 Study'],['centers','🏥 Centers'],['quiz','🧠 Quiz'],['strategy','♟ Strategy']];
   function tabStyle(t) { return { padding: '8px 15px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 13.5, background: tab===t ? '#534AB7' : 'transparent', color: tab===t ? '#fff' : '#666', transition: 'all 0.15s', whiteSpace: 'nowrap' }; }
@@ -818,9 +866,17 @@ function App() {
 
   return (
     <div>
-      <div style={{ marginBottom: 18 }}>
-        <h1 style={{ fontSize: 23, fontWeight: 800, letterSpacing: -0.5, marginBottom: 4 }}>ENT Interview Master</h1>
-        <p style={{ color: '#888', fontSize: 14 }}>SCFHS · Jeddah · {allQuestions.length} questions · answers saved to file · anchors not scripts · keep it under 90 seconds</p>
+      <div style={{ marginBottom: 18, display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 16, flexWrap: 'wrap' }}>
+        <div>
+          <h1 style={{ fontSize: 23, fontWeight: 800, letterSpacing: -0.5, marginBottom: 4 }}>ENT Interview Master</h1>
+          <p style={{ color: '#888', fontSize: 14 }}>SCFHS · Jeddah · {allQuestions.length} questions · edits auto-saved in this browser · anchors not scripts · keep it under 90 seconds</p>
+        </div>
+        <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+          <button onClick={exportJson} style={ioBtn} title="Download your answers as a .json file">⬇ Export .json</button>
+          <button onClick={exportHtml} style={Object.assign({}, ioBtn, { borderColor: '#cdb7ec', color: '#534AB7' })} title="Download a fresh HTML with your current edits baked in">⬇ Portable .html</button>
+          <button onClick={function(){ fileInputRef.current && fileInputRef.current.click(); }} style={ioBtn} title="Load answers from a .json file">⬆ Import</button>
+          <input ref={fileInputRef} type="file" accept="application/json,.json" onChange={onImportFile} style={{ display: 'none' }} />
+        </div>
       </div>
       <div style={{ display: 'flex', gap: 4, background: '#f1efe8', borderRadius: 10, padding: 4, marginBottom: 14, width: 'fit-content', flexWrap: 'wrap' }}>
         {tabs.map(function(pair){ return <button key={pair[0]} style={tabStyle(pair[0])} onClick={function(){ setTab(pair[0]); }}>{pair[1]}</button>; })}

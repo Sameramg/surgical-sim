@@ -12,6 +12,19 @@ and any edits you make are saved automatically in that browser.
 > First load needs an internet connection (React is pulled from a CDN, same as
 > the original). After that the content is local.
 
+### Moving your edits between machines
+
+An open web page can't rewrite the file it was launched from, so live edits are
+auto-saved in **that browser** (localStorage). To carry edits elsewhere, use the
+buttons in the top-right:
+
+- **⬇ Export .json** — downloads your current answers as `ent_answers.json`.
+- **⬆ Import** — loads an `ent_answers.json` back in (on any machine/browser).
+- **⬇ Portable .html** — downloads a *fresh copy of the whole app* with your
+  current edits baked into the file. That new HTML carries the content with it,
+  so opening it on another computer shows your edits immediately — this is how
+  an HTML file "retains" content across machines.
+
 ## Why the original `.command` "wouldn't open"
 
 The thing you were handed was a launcher, not a document. It failed for several
