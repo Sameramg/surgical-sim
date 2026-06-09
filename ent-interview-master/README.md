@@ -40,25 +40,26 @@ reasons:
 
 The standalone HTML above sidesteps all three.
 
-## Optional: the original server route (file-based saving)
+## Auto-save to a file (the `.command` route)
 
-If you specifically want answers written back to `ent_answers.json` on disk
-(instead of browser storage), the fixed launcher still works **on macOS with
-Node.js installed**:
+If you'd rather have every edit written straight to `ent_answers.json` on disk —
+no Export button, no browser storage — use the launcher. **On macOS with
+[Node.js](https://nodejs.org) installed**, just double-click
+`entinterviewmaster.command` (or run `./entinterviewmaster.command`).
 
-```bash
-chmod +x entinterviewmaster.command   # already set in this repo
-./entinterviewmaster.command          # or double-click it
-```
+It opens the app in your browser and **auto-saves every change to
+`ent_answers.json`** (debounced, written atomically so a crash can't corrupt the
+file). Leave the terminal window open while you study; close it to stop the app.
 
-Keep `entinterviewmaster.command` and `ent_answers.json` in the same folder.
-The standalone HTML also detects this server automatically and will use it when
-present, falling back to browser storage otherwise.
+It serves the very same `ent_interview_master.html`, so you get all the same
+features — it just swaps browser storage for file storage. Keep all three files
+in the same folder. If Node.js isn't installed, the launcher falls back to
+opening the standalone (browser-saved) version so it still works.
 
 ## Files
 
 | File | Purpose |
 |------|---------|
-| `ent_interview_master.html` | Standalone app — **double-click this**. |
+| `ent_interview_master.html` | The app — **double-click this** for the no-setup version. |
 | `ent_answers.json` | Your saved answers (also embedded in the HTML). |
-| `entinterviewmaster.command` | Original Node launcher, kept for file-based saving. |
+| `entinterviewmaster.command` | macOS launcher that serves the app and auto-saves to the file. |
