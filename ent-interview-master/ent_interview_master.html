@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ENT Interview Master</title>
+<script src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; background: #faf9f6; color: #2a2a28; font-size: 15px; line-height: 1.5; }
+  #root { max-width: 880px; margin: 0 auto; padding: 24px 16px 80px; }
+  textarea { font-family: inherit; resize: vertical; font-size: 13px; line-height: 1.6; }
+  input[type="checkbox"] { width: 17px; height: 17px; cursor: pointer; accent-color: #1D9E75; flex-shrink: 0; margin-top: 2px; }
+  button { font-family: inherit; }
+  .fade { animation: fade 0.35s ease; }
+  @keyframes fade { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const data = {
+  categories: [
+    { name: "Situational & Behavioral", count: 90, pct: 38, color: "#534AB7", bg: "#EEEDFE", subgroups: [
+      { name: "On-call scenarios", count: 23, examples: ["Cover colleague's on-call during wedding?", "Case in ER you don't know — what do you do?", "Critical case, senior not answering, what do you do?", "Traveling Thursday, on-call Friday, flight delayed?"] },
+      { name: "Family vs Work balance", count: 18, examples: ["Are you married? When will you get married?", "Wife calls — child is sick during clinic", "Husband says leave the program, what do you do?", "Where will you leave your child during on-call?"] },
+      { name: "Strengths & Why choose you", count: 13, examples: ["Why should we rank you #1?", "What are your strengths?", "How do you compare with other candidates?"] },
+      { name: "Conflict resolution", count: 10, examples: ["Conflict with senior — how did you solve it?", "Argument with colleague, what do you do?", "Senior shouts at you in front of patient?"] },
+      { name: "Role model / References", count: 7, examples: ["If we called your reference, what would they say?", "Who is your role model?", "What is your reference in reading?"] },
+      { name: "Stress & Burnout", count: 5, examples: ["How do you deal with stress and burnout?", "Tell me about a time under pressure"] },
+      { name: "Internship learnings", count: 4, examples: ["What did you learn from being an intern?", "Tell us about an interesting case"] },
+      { name: "Leadership", count: 3, examples: ["Tell us about your leadership skills", "What is the quality of a good leader?"] },
+      { name: "Weakness", count: 3, examples: ["What is your weakness?", "What makes you angry about patients?"] },
+      { name: "Angry / Difficult patient", count: 4, examples: ["Angry patient in clinic, what do you do?", "Difficult patient you met?"] },
+    ]},
+    { name: "Program-Specific & Vision", count: 66, pct: 28, color: "#1D9E75", bg: "#E1F5EE", subgroups: [
+      { name: "Goals / 5-10 year vision", count: 12, examples: ["Where do you see yourself in 5 years?", "Where do you see yourself in 10 years?", "What are your goals in life?"] },
+      { name: "Elective & Rotation history", count: 10, examples: ["Where did you take your ENT electives?", "Why didn't you take rotation in our hospital?", "Did you take clinical attachment with us?"] },
+      { name: "Fellowship / Subspecialty", count: 10, examples: ["What fellowship are you planning?", "Which subspecialty interests you most?", "What sub-speciality within ENT?"] },
+      { name: "Why this center / program", count: 8, examples: ["Why our center?", "What do you know about our program?", "Why did you choose this hospital?"] },
+      { name: "Ranking & Commitment", count: 6, examples: ["Are we your #1?", "How will you rank the hospitals?", "If accepted elsewhere, would you still choose us?"] },
+      { name: "If not accepted", count: 6, examples: ["What if we didn't accept you this year?", "Will you change specialty if not matched?"] },
+      { name: "Questions for them", count: 6, examples: ["Do you have any questions for us?"] },
+      { name: "Unpaid / Contract", count: 4, examples: ["Would you accept unpaid?", "If I gave you the contract now, would you sign?"] },
+      { name: "Contribution to program", count: 4, examples: ["What will you contribute?", "How can you add to the field?"] },
+    ]},
+    { name: "Motivation & Identity", count: 26, pct: 11, color: "#D85A30", bg: "#FAECE7", subgroups: [
+      { name: "Why ENT / specialty", count: 9, examples: ["Why did you choose ENT?", "Why are you sure this specialty is right?", "What drew you to ENT?"] },
+      { name: "Hobbies / Free time", count: 8, examples: ["What are your hobbies?", "What do you do in your free time?", "Last non-medical book you read?"] },
+      { name: "Introduce yourself", count: 5, examples: ["Tell us about yourself", "Introduce yourself in 1 minute", "Summarize your CV"] },
+      { name: "Describe in word(s)", count: 4, examples: ["Describe yourself in 1 word?", "Describe yourself in 3 words?"] },
+    ]},
+    { name: "Clinical Reasoning", count: 24, pct: 10, color: "#378ADD", bg: "#E6F1FB", subgroups: [
+      { name: "Surgery experience", count: 8, examples: ["What operations did you attend?", "What cases did you see in OR?", "What cases did you encounter on-call?"] },
+      { name: "Otology / Hearing", count: 5, examples: ["Approach to deafness in 3yo", "Progressive hearing loss in 20yo female (otosclerosis)", "Interpret audiogram: SNHL", "Rinne & Weber interpretation"] },
+      { name: "Tonsils / Adenoids", count: 5, examples: ["Post-tonsillectomy bleeding management", "Peritonsillar abscess approach", "Consent parents for tonsillectomy", "Primary vs secondary bleeding"] },
+      { name: "Airway / Emergency", count: 4, examples: ["Button battery in nose — ER approach", "Foreign body in pediatric airway", "First emergency case — your role?"] },
+      { name: "Nose / Sinus", count: 1, examples: ["Choanal atresia in newborn", "CT sinus interpretation (fungal)", "Allergic rhinitis management"] },
+      { name: "Other ENT", count: 1, examples: ["Epistaxis full workup", "Tongue ulcer DDx", "Post-thyroidectomy hematoma", "Vocal cord lesion found incidentally"] },
+    ]},
+    { name: "Ethics & Professionalism", count: 15, pct: 6, color: "#D4537E", bg: "#FBEAF0", subgroups: [
+      { name: "Doctor disrespecting patient", count: 6, examples: ["You see a doctor mistreating a patient", "Consultant practicing poor patient care"] },
+      { name: "Senior's medical mistake", count: 4, examples: ["Senior made mistake in ER, you noticed", "Consultant prescribes harmful medication", "Wrong dose — chain of command"] },
+      { name: "Your own mistake", count: 2, examples: ["What if you made a medical mistake?", "You arrived late to clinic — patients angry"] },
+      { name: "Extra on-calls / Unfair", count: 2, examples: ["Chief gives you 9 on-calls vs 6 for others", "Junior keeps calling in sick — you're chief"] },
+      { name: "Asked to lie / hide", count: 1, examples: ["Consultant says don't document OR complication", "Consultant asks you to lie"] },
+    ]},
+    { name: "Research & Academic", count: 14, pct: 6, color: "#639922", bg: "#EAF3DE", subgroups: [
+      { name: "Talk about your research", count: 8, examples: ["How many researches do you have?", "Talk about one research and your role", "Have you published?", "Choose one you're proud of"] },
+      { name: "Research concepts", count: 6, examples: ["What is impact factor?", "Levels of evidence?", "P-value?", "Study designs?"] },
+    ]},
+  ],
+  centers: [
+    { name: "KAUH", questionCount: 9, style: "3 stations: Dept Head → RTP → Residents", panel: "Talal Al-Khatib (paeds, ex-RTP), Mazen Merdad (onc), Faisal Zawawi (otology/CI), Almoaidbellah Ramma (current RTP), Nujoom (H&N). Chief: Motasem (R5).", emphasis: ["Role model among references", "One-hand tie + suture types", "Differences between hospitals you rotated at", "Pharmacology (cefdinir dosing)"], unique: "Academic-heavy panel — Merdad/Marzouki publish prolifically with residents. Research must be sharp. You met Ramma + Nujoom in clinic (warm but thin).", you: "Warm-thin: face known, no working relationship. Lead with research identity + craft. Mention the clinic with Ramma once, don't oversell." },
+    { name: "KSAUHS / National Guard", questionCount: 6, style: "Standard general + ethical", panel: "Haya Alsubaie (current RTP), Hadi Al-Hakami (ex-RTP, assoc prof), Mohammad Algarni, Mohammad Alshareef (H&N recon, McGill). Chief: Ali Alzahrani (R4).", emphasis: ["General behavioral + ethics", "Strengths / weakness", "Research pedigree"], unique: "Values academic pedigree + cross-institutional research ties. You did an elective here — they know your face, residents still in contact.", you: "TIER 1 — home turf. Use 'during my elective with your team...' + specific detail. Residents text you about symposiums. Play offense." },
+    { name: "KFAFH (Armed Forces)", questionCount: 4, style: "Brief, standard general questions", panel: "Nawaf Alsolami (RTP, otologist), Suzan Alzaidi (deputy RTP, laryngology), Mohammed Al-Bar (chairman). Chief: Ahmed Mogharbel (R4).", emphasis: ["Surgeries attended", "Elective locations", "If not accepted"], unique: "Shortest interview. Mogharbel (chief) worked with Ramma at KAU — possible shared connection. Otology-led panel.", you: "TIER 3 — cold. Clinical answers + research do all the work. If otology comes up, Alsolami is an otologist — be ready." },
+    { name: "Second Cluster — KAMC", questionCount: 24, style: "Mostly Arabic, conversational, soft-skill heavy", panel: "Sumiyah Bokhari (RTP, facio-plastic, Seoul-trained), Norah Alsharif (deputy RTP), Ahmad Sayed (sleep), Aisha Shamsalddin (otology).", emphasis: ["Which center will you rank first?", "Why Jeddah if not from here?", "Will you change specialty?", "Family/work balance"], unique: "Both RTPs in same panel. Direct pressure on ranking. Personal-life probing. You did an elective here — left strong impression.", you: "TIER 1 — home turf. They know your face. Bokhari = facio-plastic/Seoul. Reference a specific case or teaching moment from the elective." },
+    { name: "Second Cluster — KFGH", questionCount: 24, style: "Conversational, soft-skill + some clinical", panel: "Mahmoud Joharji (RTP, rhinology/skull base), Abeer Malebari (deputy RTP, paeds), Jad Moni (SORL guidelines), Saleh.", emphasis: ["Ranking & commitment", "Elective history", "Clinical basics"], unique: "Joharji = rhinology/skull base — your rhinology course (Andejani) + rhinoplasty interest is a real bridge here. You did an elective here.", you: "TIER 1 — home turf. Joharji's rhinology focus aligns with your stated pull toward rhinoplasty/the delicate craft. Use it." },
+    { name: "Fakeeh", questionCount: 28, style: "Heavy clinical + ethical scenarios", panel: "Hossam Amoodi (RTP + dept chairman, otologist), Jamal Jawad (rhinology/skull base, Irish fellow), Ibrahim Issa (laryngology).", emphasis: ["Epistaxis cases + audiogram", "Post-tonsillectomy bleeding + CT sinus", "Button battery / airway", "Ethics: drug screening"], unique: "HIGHEST clinical load. CT/audiogram interpretation. Post-thyroidectomy haematoma scenario. Amoodi (otologist) explains the heavy otology questions.", you: "TIER 3 — cold + clinical gauntlet. Refresh otology/audiograms hard. Jawad is an Irish fellow — you trained in Ireland (Trinity), possible rapport." },
+  ]
+};
+
+// ── Portfolio data (from excavation) ──────────────────────────
+const SPINE = {
+  line: "I explored seriously, chose deliberately, and the choice held up under scrutiny.",
+  steps: [
+    { step: "01 · explored", label: "Neurology", killed: true, why: "Gripped me intellectually — dug deep on my own time. But it was the theory I loved, not the clinical reality." },
+    { step: "02 · tested", label: "Neurosurgery", killed: true, why: "The 40-year-old, one eye blown, first-assist, ICU, dead in 2 days, cause unknown. Prognosis made real." },
+    { step: "03 · loved, then capped", label: "EM", killed: true, why: "SimWars made me love medicine. But EM has a ceiling — no craft, no continuity, shift-work life." },
+    { step: "04 · ruled out", label: "Anaesthesia", killed: true, why: "Repetitive. 'You can put your touch but who cares — the patient won't.' No visible reward." },
+    { step: "05 · survived", label: "ENT", chosen: true, why: "Kept the emergency rush, added the craft, the anatomy, visible outcomes, and a life I can build." },
+  ],
+  whyENT: [
+    { h: "The pull", items: ["The only OR I never wanted to leave halfway", "Spatially complex, immediately visible, technically demanding", "Margin of error is tiny — ear, septum, neck — so mastery matters"] },
+    { h: "The fit", items: ["Operating > emergencies > clinic, honestly", "Airway emergencies keep the SimWars rush alive", "Tight community where excellence is actually noticed"] },
+    { h: "The life", items: ["Family-oriented; want a life I can structure", "Achievable in ENT, not in EM shift-work or pure academia", "Room to grow — subspecialty, research, teaching"] },
+  ]
+};
+
+const BUCKETS = [
+  { tag: "Bucket 1", name: "Who are you?", framework: "CAMP · motivation + identity + fit", color: "#D85A30", bg: "#FAECE7", ev: [
+    ["Elimination story", "Neuro → neurosurg → EM → anaes → ENT. Tested, not defaulted."],
+    ["The 40-year-old case", "Neurosurg prognosis felt, not just argued. Your real patient case."],
+    ["The OR I didn't leave", "Branchial cleft + methylene blue, parotids, rhinoplasty, nasal trauma."],
+    ["Craft identity", "Drawn to spatial, delicate work with immediate, improvable outcomes."],
+    ["H&N anatomy distinction", "Recognised by continuous assessment — not chased. Fresh-cadaver work."],
+    ["Vesal 1/2/3 + rhinology course", "Investment made after committing. Knows the community."],
+    ["NGHA + MOH electives", "Pushed to be treated as a junior resident. Residents still in contact."],
+  ]},
+  { tag: "Bucket 2", name: "Can we trust you?", framework: "SPIES (ethics) · STAR (behavioural)", color: "#1D9E75", bg: "#E1F5EE", ev: [
+    ["The scissors incident", "Failed something basic in front of the chief. Sat with it. Came back better."],
+    ["On-call coverage", "Team-first, but patient safety is the boundary. Escalate when unsafe."],
+    ["Family vs work", "'Not 50/50 daily.' Balance is over years. The anchor: showing up."],
+    ["TLE leadership failure", "Diagnosed own management breakdown. Joined other projects to learn."],
+    ["Student rep + S2S mentor", "Mediated a lecturer conflict. Saw how life stressors hit performance."],
+    ["SimWars under pressure", "Calm when randomised into any role. Immediate-feedback growth loop."],
+    ["TEAMS / ALERT / TIPS", "From blanking in emergencies to safe, coherent escalation."],
+    ["The diabetic 6-year-old", "Kid braver than you framed him. Humility moment that stuck."],
+  ]},
+  { tag: "Bucket 3", name: "Will you add value?", framework: "Evidence sandwich · trait → proof → trait", color: "#534AB7", bg: "#EEEDFE", ev: [
+    ["RSI meta-analysis", "First author + PI. Ketamine vs etomidate. Clinical framing is solid."],
+    ["TLE systematic review", "Caught a 44% inclusion error via your own audit. Rigour instinct."],
+    ["Research identity", "You initiate and lead — not just participate. Sought the PIs yourself."],
+    ["Paeds + psych abstracts", "First author on both. Breadth before the surgical focus."],
+    ["Rhinology insight", "'Even consultants are still learning.' Mastery as a lifelong path."],
+    ["4 rec letters, 3 specialties", "EM + anaes + ENT vouch for you. Proof the elimination was real."],
+    ["Self-built learning tools", "Operative guides, ENT curriculum, spaced-rep OS. Builds what he needs."],
+  ]},
+];
+
+const STRATEGY = {
+  warn: ["Don't lead with the anatomy distinction — invites a question you may flub 4 years on", "Don't say 'mix of clinic and surgery' — RTPs are bored of it", "Don't over-explain the late ENT decision — own it as elimination, not default", "Don't ramble — panel format is ~90 seconds per answer"],
+  edge: ["SimWars A-team push — you fought your way in from the B squad", "TLE audit catch — you found your own 44% error", "Scissors story + what came next — rare maturity evidence", "4 letters across 3 specialties — no one else has this", "You build your own tools, unprompted"],
+  gap: ["A felt ENT moment, not just the logical case", "One specific thing learned at each elective centre", "Tighten the 40-year-old case into a clean 45-second telling", "Refresh H&N anatomy before the clinical station"],
+  frameworks: [
+    ["CAMP", "Who are you", "Clinical · Academic · Management · Personal", "For 'tell me about yourself', 'why ENT', 'why us', goals, ranking."],
+    ["SPIES / STAR", "Can we trust you", "Seek · Safety · Initiative · Escalate · Support", "SPIES for ethics. STAR for behavioural. Name patient safety early."],
+    ["SANDWICH", "Will you add value", "Trait → proof → trait", "Never state a trait without a story; never tell a story without a trait."],
+  ]
+};
+
+const allQuestions = [];
+data.categories.forEach(function(cat, ci) {
+  cat.subgroups.forEach(function(sg, si) {
+    sg.examples.forEach(function(q, qi) {
+      allQuestions.push({ id: ci+'_'+si+'_'+qi, question: q, catIdx: ci, sgIdx: si, catName: cat.name, catColor: cat.color, catBg: cat.bg, sgName: sg.name });
+    });
+  });
+});
+
+// Old answers belong to a different CV (Yahya). Flag them.
+var YAHYA_KEYS = ["0_0_0","0_0_1","0_0_2","0_0_3","0_1_0","0_1_1","0_1_2","0_1_3","0_2_0","0_2_1","0_2_2","0_3_0","0_3_1","0_3_2","0_4_1","0_4_2","0_9_0","0_9_1","0_6_0","0_6_1","2_0_0","2_0_1","2_0_2","2_1_0","2_1_1","2_1_2","2_2_0","2_2_1","2_3_0","2_3_1","4_0_0","4_0_1","4_1_0","4_1_1","4_1_2","4_2_0","4_2_1","4_3_0","4_3_1","4_4_0","4_4_1"];
+function isYahya(id, answerVal) {
+  if (!answerVal) return false;
+  return YAHYA_KEYS.indexOf(id) !== -1;
+}
+
+function getCenterQuestions(center) {
+  var emphWords = center.emphasis.join(' ').toLowerCase().split(/\W+/).filter(function(w){ return w.length > 3; });
+  var scored = allQuestions.map(function(q) {
+    var haystack = (q.sgName + ' ' + q.catName + ' ' + q.question).toLowerCase();
+    var score = emphWords.filter(function(w){ return haystack.includes(w); }).length;
+    return Object.assign({}, q, { score: score });
+  });
+  scored.sort(function(a,b){ return b.score - a.score || Math.random() - 0.5; });
+  return scored.slice(0, 4);
+}
+
+function useFileData() {
+  var [answers, setAnswers] = React.useState({});
+  var [checked, setChecked] = React.useState({});
+  var [wrong, setWrong] = React.useState({});
+  var saveTimer = React.useRef(null);
+  var stateRef = React.useRef({ answers: {}, checked: {}, wrong: {} });
+
+  React.useEffect(function() {
+    function apply(d) {
+      var a = d.answers || {}, c = d.checked || {}, w = d.wrong || {};
+      stateRef.current = { answers: a, checked: c, wrong: w };
+      setAnswers(a); setChecked(c); setWrong(w);
+    }
+    // Try the local server (when launched via the .command); otherwise fall
+    // back to localStorage layered over the data baked into this file.
+    fetch('/data').then(function(r){ if (!r.ok) throw 0; return r.json(); })
+      .then(function(d){ apply(d); })
+      .catch(function() { apply(lsLoad() || EMBEDDED_DATA); });
+  }, []);
+
+  function scheduleSave() {
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(function() {
+      lsSave(stateRef.current);
+      fetch('/save', { method: 'POST', body: JSON.stringify(stateRef.current) }).catch(function(){});
+    }, 800);
+  }
+  function updateAnswers(fn) { setAnswers(function(prev){ var next = fn(prev); stateRef.current = Object.assign({}, stateRef.current, { answers: next }); scheduleSave(); return next; }); }
+  function updateChecked(fn) { setChecked(function(prev){ var next = fn(prev); stateRef.current = Object.assign({}, stateRef.current, { checked: next }); scheduleSave(); return next; }); }
+  function updateWrong(fn)   { setWrong(function(prev){   var next = fn(prev); stateRef.current = Object.assign({}, stateRef.current, { wrong: next });   scheduleSave(); return next; }); }
+  return { answers, checked, wrong, updateAnswers, updateChecked, updateWrong };
+}
+
+
+// ── Standalone persistence (works as a plain double-clicked file) ──
+const EMBEDDED_DATA = {
+  "answers": {
+    "0_0_0": "<font style=\"font-size: 16px;\"></font><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-family: -webkit-standard;\"></span><span style=\"font-size: 14px;\">🧭 Principle:</span><span style=\"font-family: -webkit-standard;\"></span><span style=\"\"><br></span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">\"Residency is built on <b>teamwork</b> and <b>mutual</b> <b>support</b> — and if a colleague needed me to cover their on-call during their wedding, I would do so without hesitation.&nbsp;</span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-family: -webkit-standard;\"></span><span style=\"font-size: 14px;\">⚙️ Action:</span><span style=\"font-family: -webkit-standard;\"></span><span style=\"\"><br></span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">I would make sure i go through the endorsements from the teams to make sure things run smoothly.\" (smile)&nbsp;</span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-family: -webkit-standard;\"></span><span style=\"font-size: 14px;\">🎭 Human Moment:</span><span style=\"font-family: -webkit-standard;\"></span><span style=\"\"><br></span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">\"The only downside, of course, is missing the wedding — but I suppose that's what gift registries are for.\"</span></p>",
+    "0_0_1": "<p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"></p><span style=\"\"></span><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"white-space: pre-wrap; color: rgb(248, 248, 246); font-family: &quot;Anthropic Sans&quot;, system-ui, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-variant-ligatures: normal; background-color: rgb(18, 18, 18);\"></span><span style=\"font-size: 14px;\">Template:</span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">&nbsp;🧭 Principle:\nPatient safety always comes first — and such cases are nice to learn from and easy to never forget&nbsp;</span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">⚙️ Action: <span style=\"background-color: rgb(255, 255, 136);\"><b>Stability</b></span>&nbsp;</span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">&nbsp;My first step is always to assess stability. If the patient is stable, I would take a focused history and examination, look up what I need to, formulate a working plan, and then discuss my findings and proposed management with my second on-call before acting. If the patient is unstable, I contact my senior immediately — no hesitation, no delay.\"&nbsp;</span></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-size: 14px;\">🎭 Human Moment: N/a</span><span style=\"white-space: pre-wrap; color: rgb(248, 248, 246); font-family: &quot;Anthropic Sans&quot;, system-ui, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-variant-ligatures: normal; background-color: rgb(18, 18, 18);\"></span><br></p>",
+    "0_0_2": "<p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"></p><span style=\"font-size: 14px;\"><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🧭 Principle:<br></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">&nbsp;\"Patient safety is non-negotiable — and I also understand that my senior is <span style=\"background-color: rgb(255, 255, 136);\">human</span>. They may be temporarily unavailable for any number of reasons.</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">⚙️ Action: <b style=\"background-color: rgb(255, 255, 136);\">Stabilize</b>&nbsp;<br></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"I would attempt to reach my second on-call again while simultaneously initiating whatever stabilization measures are within my scope. If there is still no response, I escalate immediately to my third on-call. The chain of escalation exists precisely for moments like this — I would use it without hesitation.\"</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🎭 Human Moment:</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">N/A&nbsp;</p></span><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"></p>",
+    "0_0_3": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong></strong></p><span style=\"font-size: 14px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle:</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"These situations are rare, but they do happen — which is why I believe in planning ahead and keeping the right people informed.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action: <span style=\"background-color: rgb(255, 255, 136);\">Plan Ahead &amp; Sleep deprived?</span></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"Whenever I know I will be traveling around an on-call date, I make it a point to inform my chief in advance, flag the potential risk, and request a backup arrangement in case of any delays. If the situation arises unexpectedly — for example, if I only learn of the delay at the last moment — I would contact my chief immediately, be transparent about my situation, and either arrange cover until I arrive, or take the full shift off if I am not in a fit state to perform clinical duties safely after travel.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong>&nbsp;N/A ✅</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p></span><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"></p>",
+    "0_1_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle: Responsibility,&nbsp;</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"I see marriage as a responsibility I take seriously — and like residency, it requires honest communication and mutual understanding from the start.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\"><strong><font color=\"#000000\"><span style=\"caret-color: rgb(0, 0, 0);\">⚙️ Action: &nbsp;Demanding&nbsp;</span></font></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"I am not currently married, and I am planning to get married within the next two years, inshallah. I am fully aware that residency is demanding, and I intend to be upfront with my partner about that from day one — that there will be long hours, difficult days, and times where I am not as available as either of us would like. I <span style=\"background-color: rgb(255, 255, 136);\">believe that transparency </span>before marriage is what makes the transition manageable.\"<br></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong>&nbsp;<br></p><div><br></div>",
+    "0_1_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;: <b>Family emergency &amp; life&nbsp;</b></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"Family emergencies are a reality of life, and I believe the right response is always to stay calm, assess the situation, and act proportionately/accordingly.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action:</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">&nbsp;\"I don't have children yet, but I can relate — I would think of it the way I would if my mother called me about a sick sibling. My first step would be to briefly triage the situation over the phone: is there a fever, are there any red flags, how is the child's overall condition. If it turns out to be nothing serious, I would complete my clinic and follow up immediately after. If there are genuine concerns, I would speak to my senior, explain the situation honestly, and request to be excused — trusting that the team would understand, just as I would for any of them.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong>&nbsp;</p><div><br></div>",
+    "0_1_2": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle: Unmet expectations&nbsp;</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">&nbsp;\"I believe that most marital tensions during residency stem from unmet expectations — and the antidote to that is honest communication, not ultimatums.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action:</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"If my wife asked me to leave the program, my first response would not be to choose — it would be to understand. I would want to know what is driving that request, what she is feeling, and what we can realistically do together to address it. I would make every effort to find a <b>middle ground</b> — whether that means more intentional time together, seeking counseling, or restructuring how I manage my commitments at home. However, if after all of that we still could not find a resolution, I will be honest — ENT is a core part of who I am. It is not something I pursued lightly, and it is not something I could walk away from. <span style=\"background-color: rgb(255, 255, 136);\">I hope it never reaches that point, and I believe it would not — because I intend to choose my partner with that understanding already in place.</span>\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong>&nbsp;<br></p><div><br></div>",
+    "0_1_3": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle:</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"This comes down to planning ahead — and making sure the support system around my family is established well before residency begins, <b>not figured out on the night of an on-call.</b>\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action:</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"I would ensure that my on-call schedule is shared with my wife well in advance. On days where she is also working or unavailable, we would have a pre-arranged plan with our families — grandparents, close relatives — <b>who are aware of the demands of residency and are prepared to step in in such cases</b>. These situations are entirely expected in residency, and I believe the families of residents play a quiet but essential role in making it all work.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment:</strong></p><div><br></div>",
+    "0_2_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🌟 Safety · Efficiency · Teamwork</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;\"I wouldn't ask you to rank me number one because of a title or a grade — I would ask you to rank me number one because of what I will bring to this program every single day.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong></p><p class=\"font-claude-response-body break-words whitespace-pre-wrap leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before \"I graduated top of my class — not because medicine came easy, but because I was consistent when it was hard. I contributed to research during medical school, which gave me enormous clinical insight and taught me how to think beyond what is expected.\"</p><p class=\"font-claude-response-body break-words whitespace-pre-wrap leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now \"I chose ENT specifically — not as a fallback, not as a backup plan. I built everything around that decision, not the other way around. I'd rather make the person next to me better than be the loudest one in the room. And when it comes to my patients — I don't take shortcuts. A safe physician isn't someone who never makes mistakes — it's someone who builds systems to catch them, speaks up when something doesn't feel right, and puts the patient above their own comfort.\"</p><p class=\"font-claude-response-body break-words whitespace-pre-wrap leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later \"I believe great residency training is built on safety, efficiency, and teamwork. I saw those values in action during my electives, I've already begun building that skill set, and I'm ready to bring it from day one.\"</p><p class=\"font-claude-response-body break-words whitespace-pre-wrap leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent \"I want to be part of a culture where every task has an owner, every member has a role, and nothing falls through the cracks.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🏰 The Story: ....?&nbsp;</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong>&nbsp;\"I can't tell you to rank me number one — but if you did, I'll make sure you never regret it.\"&nbsp;<em>(smile)</em></p>",
+    "0_2_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;\"I will not list adjectives — I will tell you what the people who have worked with me have seen.\"</p><div><br></div><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">-The first is consistency. I graduated top of my class not through bursts of effort but through showing up every single day — and that is exactly how I approach clinical work.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">-The second is composure under pressure. Medicine has a way of testing you when you least expect it, and I have learned — through call nights and difficult cases — that staying calm is itself a clinical skill.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">-The third is that I am coachable. I take feedback seriously, I do not let my ego get in the way of learning, and <b>I genuinely believe the best residents are the ones who know how much they still have to learn.</b>\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong>&nbsp;\"I suppose the real test is whether this matches what my supervisors would say — and I am confident it does.\" (smile)</p>",
+    "0_2_2": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong><span style=\"font-family: -webkit-standard; font-size: medium;\">&nbsp;:</span></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"font-family: -webkit-standard; font-size: medium;\">\"Honestly, I cannot compare myself to candidates I have never met — and I do not think that is the right frame. What I can tell you is what I bring.\"</span></p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong><br></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"I bring three things:</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">First — consistency. Not in bursts, but every single day regardless of circumstances.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Second — genuine commitment to ENT. This did not start with the application. I have worked toward this specifically and built habits around it long before interviews.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Third — I am here to grow, not just pass through. I am coachable, I take feedback seriously, and I make the people around me better in the process.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>Concept map to memorize:</strong></p><blockquote class=\"ml-2 border-l-4 border-[hsl(var(--border-300)/0.1)] pl-4 text-text-300\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\">Refuse → Consistency → Commitment → Growth mindset → Smile</p></blockquote>",
+    "0_3_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;\"Conflict with a senior is inevitable in any high-pressure environment — what matters is that it never reaches the patient, and that it is handled with maturity and respect.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"First — I would never address a conflict in the moment if emotions are running high. I would wait for the right time and place.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Second — I would approach my senior privately, speak honestly about what I observed or felt, and listen to their perspective without assuming I am right.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Third — if we could not resolve it between us, I would escalate to the chief. Not as an act of aggression, but because unresolved tension in a team ultimately affects everyone — including the patient.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "0_3_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;\"Conflict with a senior is inevitable in any high-pressure environment — what matters is that it never reaches the patient, and that it is handled with maturity and respect.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"First — I would never address a conflict in the moment if emotions are running high. I would wait for the right time and place.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Second — I would approach my senior privately, speak honestly about what I observed or felt, and listen to their perspective without assuming I am right.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Third — if we could not resolve it between us, I would escalate to the chief. Not as an act of aggression, but because unresolved tension in a team ultimately affects everyone — including the patient.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "0_3_2": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;\"I understand that high-pressure environments can push people past their limits — but being shouted at in front of a patient is something I would never ignore, because it affects the patient's trust and the integrity of the team.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"First — in the moment, I would stay completely calm and not respond. Reacting while my senior is already upset would only escalate things and distract from the patient in front of us.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Second — once the encounter is over and things have settled, I would approach my senior privately. I would genuinely try to understand what triggered the reaction and reflect on whether I made an error.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Third — regardless of whether I was at fault, I would respectfully but clearly communicate that I do not accept being addressed that way in front of a patient. It undermines the patient's confidence, and it damages the trust between us as colleagues.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Fourth — if it happened again or went unacknowledged, I would escalate to the chief. Not out of pride, but because a team that cannot communicate respectfully cannot function safely.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "0_4_2": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;\"I believe every stage of training demands a different approach to learning — and I am honest enough to know that what worked in medical school will need to evolve in residency.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"Throughout medical school I relied primarily on AMBOSS for conceptual understanding, and UpToDate when I needed a more structured clinical approach to a specific case or condition. These served me well as a student.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">However, I am aware — from speaking to residents — that residency demands more. Textbooks, primary literature, and specialty-specific resources become essential when you are managing real patients at a higher level of responsibility.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">I am actively preparing for that shift, and I am genuinely open to guidance from my seniors on what references have served them best in this program specifically.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "0_4_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;\"I believe deeply in the value of having someone to look up to — but I have never been able to limit that to one person.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before — \"Growing up I was always drawn to different qualities in different people — a teacher's patience, a senior's composure, a colleague's work ethic.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now — \"Rather than one role model, I have built a composite — I take the best of every person I encounter and hold myself to that standard. In that sense, everyone I respect becomes part of the model I am trying to live up to.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later — \"What this means in practice is that I am always watching, always learning, and never assuming I have found the ceiling.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent — N/A</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "0_9_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;\"In a specialty that carries oncology, anger from patients and families is not surprising — it is human. Behind every angry patient is a fear that has not been addressed yet.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>⚙️ Action</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before — \"I always try to be aware of the emotional weight a patient may be carrying before they even open their mouth.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now — \"In the moment I would not react to the anger — I would absorb it. I would acknowledge what they are feeling, lower my own tone, and if we are in a public space I would gently invite them to a private area so they feel safe to speak freely.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later — \"Once they are calm I would try to understand the root of the issue — whether it is a communication gap, a waiting time, a clinical concern — and address it as concretely as I can. If it is beyond my capacity to resolve, I would involve the right person immediately.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent — \"Most angry patients I have seen were angry because they felt unheard. If I make them feel heard from the start, the anger rarely escalates.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "0_9_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"A 67 year old patient presented to clinic requesting a septoplasty. He had an incidental finding of a deviated nasal septum on imaging — and the moment he became aware of it, he was convinced he needed surgery. The challenge was that he had absolutely no breathing complaints, no functional symptoms whatsoever.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">I was present during the encounter, and it was the resident who took the lead. What struck me was how difficult it was to redirect the patient — he kept coming back to the fact that the deviation was there, visible and documented, and in his mind that meant it needed to be fixed.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Watching how the resident handled it taught me a great deal. He listened fully, acknowledged the patient's concern, and then walked him through the reasoning clearly — that we do not operate on findings, we operate on patients. A deviation without symptoms in a 67 year old carries real surgical risk with no real benefit.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">By the end of the consultation the patient understood, and they reached a shared decision together. That encounter stayed with me — because it showed me that sometimes the best thing you can do for a patient is protect them from an operation they do not need.\"</p>",
+    "0_6_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The transition from medical student to intern is one of the most sudden shifts you will ever experience in medicine. One day you are an observer — watching, learning, standing at the periphery. The next day you are part of the team, and the weight of that responsibility lands on you before you feel ready for it.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">But what I learned is that the difficulty of that transition is precisely the point. It is in those early uncomfortable months that you discover what you are actually made of — how you handle uncertainty, how you communicate under pressure, how you show up for your team even when you are exhausted.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">And when that moment finally comes — when you realize you are no longer just watching but genuinely contributing — it is one of the best feelings medicine has to offer.</p>",
+    "0_6_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"During one of my clinic rotations, a patient presented with a complaint of hearing his own voice when speaking — autophony — along with intermittent popping sounds in his ear. Honestly, my first thought was Eustachian tube dysfunction, but I could not piece together the full picture.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The resident came in, asked me to present the case, and then asked the patient what seemed like a completely random question — 'Have you lost a significant amount of weight recently?'</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The patient paused, surprised, and confirmed that yes — he had lost a considerable amount of weight in a short period of time.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The resident explained that rapid weight loss can cause loss of the peripharyngeal fat pad that normally keeps the Eustachian tube closed — leading to a patulous Eustachian tube, where the tube stays abnormally open. That was the cause of everything the patient had been experiencing.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">What made this case stay with me was not just the diagnosis — it was the patient's reaction. He said that he had been to multiple clinics and no one had ever connected his symptoms to his weight loss. In that one question, the resident gave him an explanation that finally made sense of months of frustration.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">That moment taught me that a thorough history is not just about systems — it is about seeing the whole person in front of you.\"</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p>",
+    "2_3_0": "Curious<div><br></div><div><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Because I find everything worth understanding — medicine, systems, people, ideas. Not just what things are, but why they work the way they do</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The ENT passion, the investing threads, the Jarvis ecosystem.</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Curiosity is the engine under all of it.</p></div>",
+    "2_3_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>\"Relentless. Curious. Adaptable.\"</strong></p><ul class=\"[li_&amp;]:mb-0 [li_&amp;]:mt-1 [li_&amp;]:gap-1 [&amp;:not(:last-child)_ul]:pb-1 [&amp;:not(:last-child)_ol]:pb-1 list-disc flex flex-col gap-1 pl-8 mb-3\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Relentless</strong>&nbsp;— I don't stop at good enough. Valedictorian wasn't a title I chased — it was a byproduct of refusing to leave gaps in my understanding.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Curious</strong>&nbsp;— ENT chose me as much as I chose it. The more I learned about the ear, the cochlea, the surgical precision involved — the deeper I wanted to go.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Adaptable</strong>&nbsp;— Internship is controlled chaos. Different teams, different paces, different expectations every rotation. I learned to read the room and deliver regardless.</li></ul>",
+    "2_1_2": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>Q: Last non-medical book you read?</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>\"I've always been drawn to fiction that keeps you thinking. Recently I finished</em>&nbsp;Inferno&nbsp;<em>by Louise Cooper — part of a fantasy series. Before that I've gone through Dan Brown's series, Agatha Christie's</em>&nbsp;The Man in the Brown Suit,&nbsp;<em>J.K. Rowling's</em>&nbsp;The Cuckoo's Calling,&nbsp;<em>and Jeffrey Archer's</em>&nbsp;Only Time Will Tell.&nbsp;<em>I tend to gravitate toward stories built around mystery, strategy, and characters who operate under pressure&nbsp;</em></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em><br></em></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em><br></em></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>\"I've always made time for reading outside medicine — I tend to gravitate toward mystery, strategy, and characters under pressure:\"</em></p><ul class=\"[li_&amp;]:mb-0 [li_&amp;]:mt-1 [li_&amp;]:gap-1 [&amp;:not(:last-child)_ul]:pb-1 [&amp;:not(:last-child)_ol]:pb-1 list-disc flex flex-col gap-1 pl-8 mb-3\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Inferno – Louise Cooper</strong>&nbsp;— Fantasy series. A woman cursed to hunt demons she herself unleashed. About owning your mistakes and relentlessly correcting them. She can never rest until every demon is recaptured.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Dan Brown – Robert Langdon Series</strong>&nbsp;— A Harvard symbologist racing through art, history and conspiracy across Europe. In&nbsp;<em>Inferno</em>&nbsp;specifically, Langdon fails to stop the virus — it's already released — but it turns out to be a sterilizing agent, not a killer. Ends on a moral dilemma, not a clean win.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Agatha Christie – The Man in the Brown Suit</strong>&nbsp;— A bored young woman witnesses a suspicious death in London and follows the trail to South Africa. Christie's classic trick: the villain is the charming aristocrat hiding in plain sight the whole time.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>J.K. Rowling – The Cuckoo's Calling</strong>&nbsp;— A broke war-veteran detective hired to prove a supermodel was murdered. The twist: the client who hired him is the killer.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Jeffrey Archer – Only Time Will Tell</strong>&nbsp;— A dock worker's son rising through 1920s England trying to uncover who his father really was. Ends on a deliberate cliffhanger — the question is never answered in Book 1.</li></ul><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em><br></em></p>",
+    "2_1_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>\"I try to be intentional about how I spend my time outside the hospital:\"</em></p><ul class=\"[li_&amp;]:mb-0 [li_&amp;]:mt-1 [li_&amp;]:gap-1 [&amp;:not(:last-child)_ul]:pb-1 [&amp;:not(:last-child)_ol]:pb-1 list-disc flex flex-col gap-1 pl-8 mb-3\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Gym</strong>&nbsp;— Non-negotiable. Keeps me disciplined and mentally sharp regardless of how demanding the week is.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Reading</strong>&nbsp;— Across genres: fantasy, thriller, historical fiction. Jeffrey Archer, Agatha Christie, Dan Brown.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Investing</strong>&nbsp;— I actively follow markets, track IPOs, and manage my own portfolio. It's taught me patience and long-term thinking.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Music, films &amp; anime</strong>&nbsp;— One Piece has been a long-running companion. I find switching off creatively helps me reset.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Building my second brain</strong>&nbsp;— I use Notion and Anki to organise and retain knowledge. I genuinely enjoy optimising how I learn — I treat my own mind like a system worth engineering.</li></ul>",
+    "2_1_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>\"A few things I keep coming back to:\"</em></p><ul class=\"[li_&amp;]:mb-0 [li_&amp;]:mt-1 [li_&amp;]:gap-1 [&amp;:not(:last-child)_ul]:pb-1 [&amp;:not(:last-child)_ol]:pb-1 list-disc flex flex-col gap-1 pl-8 mb-3\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Fitness</strong>&nbsp;— Gym is a lifestyle, not just a hobby. Consistency there carries over into how I approach everything else.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Reading</strong>&nbsp;— Fiction mostly. Christie, Archer, Dan Brown. I like stories where someone has to think under pressure.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Personal investing</strong>&nbsp;— I follow markets and manage my own portfolio. It's become a genuine intellectual hobby, not just a financial one.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Anime &amp; film</strong>&nbsp;— One Piece has been running in the background of my life for years. It's how I decompress.</li><li class=\"font-claude-response-body whitespace-normal break-words pl-2\"><strong>Knowledge systems</strong>&nbsp;— Building and refining how I learn using Notion and Anki. Most people wouldn't call it a hobby but for me it genuinely is — I find it satisfying the same way others find puzzles satisfying.</li></ul>",
+    "2_2_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>CHUNK 1 — WHO I AM</strong>&nbsp;<em>(10 seconds)</em>&nbsp;\"My name is Yahya Samman. I'm 25, born and raised in Jeddah — a KSAU-HS alumnus, graduated valedictorian, first in my class, with a GPA of 4.98.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><br><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong style=\"font-size: 14px;\">CHUNK 2 — WHY ENT</strong><span style=\"font-size: 14px;\">&nbsp;</span><br></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>WHY ENT</strong><span style=\"font-family: -webkit-standard; font-size: medium;\">&nbsp;</span><span style=\"font-family: -webkit-standard; font-size: medium;\">I was seriously considering neurosurgery for most of medical school — the complexity drew me in. But when I got to the wards, I realized the scope was narrow, the prognosis was heavy, and the day-to-day left little room for the kind of diverse, evolving practice I wanted. ENT was the complete opposite. It's surgical and medical. The skill set never stops growing — microsurgery, endoscopy, head and neck oncology, rehabilitation. The patient population spans every age. The subspecialties are deep enough to spend a career in any one of them. And the prognosis — you actually see people recover, hear, breathe, speak again. No other specialty gave me that combination. ENT was the only one where I genuinely lost track of time.</span><br></p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>CHUNK 3 — PROOF</strong>&nbsp;<em>(rapid fire, confident)</em>&nbsp;\"I have publications in Q1-Q2 journals, hands-on in-vitro and in-vivo lab experience, ongoing systematic reviews in ENT, and both national and international conference presentations.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>CHUNK 4 — BEYOND THE LAB</strong>&nbsp;<em>(one breath)</em>&nbsp;\"I also led multiple public awareness campaigns throughout medical school and hosted a medical podcast at KSAU-HS.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><b>CHUNK 5 </b>— THE CLOSE (conversational, then land it) \"Outside medicine —&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">- I enjoy fiction, I recently am reading Inferno by Louise Cooper, a story about how unchecked curiosity can become someone's undoing — I found that thought-provoking .&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">- I also have a passion for building things. In my free time I build personal productivity tools and automate my own workflow using AI — I currently have a working AI-powered personal assistant I built from scratch.&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">- And I train as much as I can .&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"background-color: rgb(255, 255, 136);\">I'm here because I want to train at the highest level — and I've spent six years making sure I'd be ready.\"</span></p><div style=\"border: 0px solid color(srgb 1 1 1 / 0.1); outline-color: rgb(85, 153, 231); scrollbar-width: thin; color: rgb(255, 255, 255); font-family: &quot;Anthropic Sans&quot;, system-ui, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif, ui-sans-serif, system-ui, -apple-system, &quot;Segoe UI&quot;, Roboto, sans-serif; font-size: 14px; font-variant-ligatures: normal; background-color: rgb(31, 31, 30);\"><div data-test-render-count=\"1\" style=\"border: 0px solid color(srgb 1 1 1 / 0.1); outline-color: rgb(85, 153, 231); scrollbar-width: thin;\"><div class=\"group\" style=\"border: 0px solid color(srgb 1 1 1 / 0.1); outline-color: rgb(85, 153, 231); scrollbar-width: thin; height: auto; opacity: 1; transform: none;\"><div class=\"contents\" style=\"border: 0px solid color(srgb 1 1 1 / 0.1); outline-color: rgb(85, 153, 231); scrollbar-width: thin; display: contents;\"></div></div></div></div>",
+    "2_2_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>CHUNK 1 — WHO I AM</strong>&nbsp;<em>(10 seconds)</em>&nbsp;\"My name is Yahya Samman. I'm 25, born and raised in Jeddah — a KSAU-HS alumnus, graduated valedictorian, first in my class, with a GPA of 4.98.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><br style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong style=\"font-size: 14px;\">CHUNK 2 — WHY ENT</strong><span style=\"\">&nbsp;</span></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"\"></span><br></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\"><font color=\"#000000\"><span style=\"caret-color: rgb(0, 0, 0); font-size: 14px;\">Reaching ENT was not easy. At first I was&nbsp;</span></font>seriously considering neurosurgery for most<span style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0); font-size: medium; font-family: -webkit-standard;\">&nbsp;of medical school — the complexity drew me in. But when I got to the wards, the emotional weight of the prognosis was something I knew I couldn't sustain long-term, and the day-to-day left little room for the kind of diverse, evolving practice I wanted. ENT was the complete opposite. It's surgical — and it has a rich outpatient dimension that makes you a complete physician. The skill set never stops growing — microsurgery, endoscopy, head and neck oncology. The patient population spans every age. And the prognosis — you actually see people recover, hear, breathe, speak again. No other specialty gave me that combination.</span></p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\"><strong style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0); font-size: 14.000001px;\">CHUNK 3 — PROOF</strong><font color=\"#000000\"><span style=\"caret-color: rgb(0, 0, 0);\">&nbsp;</span></font><em style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0); font-size: 14.000001px;\">(rapid fire, confident)</em><font color=\"#000000\"><span style=\"caret-color: rgb(0, 0, 0); font-size: 14.000001px;\">&nbsp;\"</span></font>I had the opportunity&nbsp;to meet colleagues&nbsp;during medical school which has&nbsp;given me the opportunity&nbsp;to&nbsp;&nbsp;pub<font color=\"#000000\"><span style=\"caret-color: rgb(0, 0, 0); font-size: 14.000001px;\">lish&nbsp;</span></font><span style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0); font-size: 14.000001px;\">&nbsp;in Q1-Q2 journals, hands-on in-vitro and in-vivo lab experience, ongoing systematic reviews in ENT, and both national and international conference presentations.\"</span></p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong><br></strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>Skippable&nbsp;</strong></p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>CHUNK 4 — BEYOND THE LAB</strong>&nbsp;<em>(one breath)</em>&nbsp;\"I also led multiple public awareness campaigns throughout medical school and hosted a medical <span style=\"background-color: rgb(255, 182, 193);\">podcast</span> at KSAU-HS.\"</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p data-pm-slice=\"0 0 []\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p data-pm-slice=\"0 0 []\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><b>CHUNK 5&nbsp;</b>— THE CLOSE (conversational, then land it) \"Outside medicine —&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">- I enjoy fiction, I recently am reading Inferno by Louise Cooper, a story about how unchecked curiosity can become someone's undoing — I found that thought-provoking .&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">- I also have a passion for building things. In my free time I build personal productivity tools and automate my own workflow using AI — I currently have a working AI-powered personal assistant I built from scratch.&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">- And I train as much as I can .&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p data-pm-slice=\"0 0 []\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"background-color: rgb(255, 255, 136);\">I'm here because I want to train at the highest level — and I've spent six years making sure I'd be ready.\"</span></p>",
+    "2_0_0": "<font color=\"#000000\" style=\"font-size: 14.000001px;\"><span style=\"font-size: 14px;\">Reaching ENT was not easy. At first I was&nbsp;</span></font><span style=\"font-size: 14.000001px;\">seriously considering neurosurgery&nbsp;</span><span style=\"font-size: 14.000001px;\">for most</span><span style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0); font-size: medium; font-family: -webkit-standard;\">&nbsp;of medical school — the complexity drew me in. But when I got to the wards, the emotional weight of the prognosis was something I knew I couldn't sustain long-term, and the day-to-day left little room for the kind of diverse, evolving practice I wanted. ENT was the complete opposite. It's surgical — and it has a rich outpatient dimension that makes you a complete physician. The skill set never stops growing — microsurgery, endoscopy, head and neck oncology. The patient population spans every age. And the prognosis — you actually see people recover, hear, breathe, speak again. No other specialty gave me that combination.</span><br>",
+    "2_0_1": "<p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">\"Honestly — I know because of how I feel when I'm in it.&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">In every other specialty I was <b>present</b>. In ENT I was <b>invested</b>. I found myself reading beyond what was required, asking questions I wasn't assigned to ask, and genuinely looking forward to going back.&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><b>That kind of pull isn't something you manufacture</b>.&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><br></p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">And the patients — I've never felt as connected to a patient's outcome as I do in ENT.&nbsp;</p><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><b>When someone hears for the first time after a cochlear implant&nbsp;</b>— that moment stays with you. I want a career full of those moments. That's how I know.\"</p>",
+    "2_0_2": "<font color=\"#000000\" style=\"font-size: 14.000001px;\"><span style=\"font-size: 14px;\">Reaching ENT was not easy. At first I was&nbsp;</span></font><span style=\"font-size: 14.000001px;\">seriously considering neurosurgery&nbsp;</span><span style=\"font-size: 14.000001px;\">for most</span><span style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0); font-size: medium; font-family: -webkit-standard;\">&nbsp;of medical school — the complexity drew me in. But when I got to the wards, the emotional weight of the prognosis was something I knew I couldn't sustain long-term, and the day-to-day left little room for the kind of diverse, evolving practice I wanted. ENT was the complete opposite. It's surgical — and it has a rich outpatient dimension that makes you a complete physician. The skill set never stops growing — microsurgery, endoscopy, head and neck oncology. The patient population spans every age. And the prognosis — you actually see people recover, hear, breathe, speak again. No other specialty gave me that combination.</span><br>",
+    "4_0_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;Patient safety is the highest priority — but my response has to be proportional to the risk. Not every lapse carries the same urgency.</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔵 Before</strong>&nbsp;First — I check myself. Am I certain this is poor care, or is there clinical reasoning beyond my current level of knowledge? I acknowledge my limits as a resident. There are decisions that look wrong from the outside that make complete sense with more context.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟢 Now</strong>&nbsp;I triage the situation immediately:</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this life-threatening?</em>&nbsp;→ I escalate right now. No private conversation first, no waiting. I go to the highest available authority and I document everything in real time. The patient's life comes before anyone's comfort.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this suboptimal but not immediately dangerous?</em>&nbsp;→ I approach the consultant privately and respectfully — framing it as seeking understanding, not accusation.&nbsp;<em>\"I wanted to clarify the plan for this patient — I may be missing something.\"</em>&nbsp;That gives them room to correct course with dignity. If they dismiss me and I'm still certain — I escalate.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟡 Later</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔴 Prevent</strong>&nbsp;</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "4_0_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;Patient safety is the highest priority — but my response has to be proportional to the risk. Not every lapse carries the same urgency.</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔵 Before</strong>&nbsp;First — I check myself. Am I certain this is poor care, or is there clinical reasoning beyond my current level of knowledge? I acknowledge my limits as a resident. There are decisions that look wrong from the outside that make complete sense with more context.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟢 Now</strong>&nbsp;I triage the situation immediately:</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this life-threatening?</em>&nbsp;→ I escalate right now. No private conversation first, no waiting. I go to the highest available authority and I document everything in real time. The patient's life comes before anyone's comfort.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this suboptimal but not immediately dangerous?</em>&nbsp;→ I approach the consultant privately and respectfully — framing it as seeking understanding, not accusation.&nbsp;<em>\"I wanted to clarify the plan for this patient — I may be missing something.\"</em>&nbsp;That gives them room to correct course with dignity. If they dismiss me and I'm still certain — I escalate.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟡 Later</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔴 Prevent</strong>&nbsp;</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "4_1_0": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;Patient safety is the highest priority — but my response has to be proportional to the risk. Not every lapse carries the same urgency.</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔵 Before</strong>&nbsp;First — I check myself. Am I certain this is poor care, or is there clinical reasoning beyond my current level of knowledge? I acknowledge my limits as a resident. There are decisions that look wrong from the outside that make complete sense with more context.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟢 Now</strong>&nbsp;I triage the situation immediately:</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this life-threatening?</em>&nbsp;→ I escalate right now. No private conversation first, no waiting. I go to the highest available authority and I document everything in real time. The patient's life comes before anyone's comfort.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this suboptimal but not immediately dangerous?</em>&nbsp;→ I approach the consultant privately and respectfully — framing it as seeking understanding, not accusation.&nbsp;<em>\"I wanted to clarify the plan for this patient — I may be missing something.\"</em>&nbsp;That gives them room to correct course with dignity. If they dismiss me and I'm still certain — I escalate.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟡 Later</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔴 Prevent</strong>&nbsp;</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "4_1_1": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;Patient safety is the highest priority — but my response has to be proportional to the risk. Not every lapse carries the same urgency.</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔵 Before</strong>&nbsp;First — I check myself. Am I certain this is poor care, or is there clinical reasoning beyond my current level of knowledge? I acknowledge my limits as a resident. There are decisions that look wrong from the outside that make complete sense with more context.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟢 Now</strong>&nbsp;I triage the situation immediately:</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this life-threatening?</em>&nbsp;→ I escalate right now. No private conversation first, no waiting. I go to the highest available authority and I document everything in real time. The patient's life comes before anyone's comfort.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this suboptimal but not immediately dangerous?</em>&nbsp;→ I approach the consultant privately and respectfully — framing it as seeking understanding, not accusation.&nbsp;<em>\"I wanted to clarify the plan for this patient — I may be missing something.\"</em>&nbsp;That gives them room to correct course with dignity. If they dismiss me and I'm still certain — I escalate.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟡 Later</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔴 Prevent</strong>&nbsp;</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "4_1_2": "<p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🧭 Principle</strong>&nbsp;Patient safety is the highest priority — but my response has to be proportional to the risk. Not every lapse carries the same urgency.</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔵 Before</strong>&nbsp;First — I check myself. Am I certain this is poor care, or is there clinical reasoning beyond my current level of knowledge? I acknowledge my limits as a resident. There are decisions that look wrong from the outside that make complete sense with more context.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟢 Now</strong>&nbsp;I triage the situation immediately:</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this life-threatening?</em>&nbsp;→ I escalate right now. No private conversation first, no waiting. I go to the highest available authority and I document everything in real time. The patient's life comes before anyone's comfort.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><em>Is this suboptimal but not immediately dangerous?</em>&nbsp;→ I approach the consultant privately and respectfully — framing it as seeking understanding, not accusation.&nbsp;<em>\"I wanted to clarify the plan for this patient — I may be missing something.\"</em>&nbsp;That gives them room to correct course with dignity. If they dismiss me and I'm still certain — I escalate.</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🟡 Later</strong>&nbsp;</p><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🔴 Prevent</strong>&nbsp;</p><hr class=\"border-border-200 border-t-0.5 my-3 mx-1.5\" style=\"font-size: 14.000001px;\"><p class=\"font-claude-response-body break-words whitespace-normal leading-[1.7]\" style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><strong>🎭 Human Moment</strong></p>",
+    "4_2_0": "<p style=\"font-size: 14.000001px; caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\"><span style=\"white-space: pre-wrap; color: rgb(248, 248, 246); font-family: &quot;Anthropic Sans&quot;, system-ui, &quot;Segoe UI&quot;, Roboto, Helvetica, Arial, sans-serif; font-variant-ligatures: normal; background-color: rgb(18, 18, 18);\"></span></p><div><p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Cores in every answer: Safety, efficiency, and teamwork:</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🧭 Principle Or Story 🏰&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">⚙️ Action&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The story 🏰:&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🎭 Human Moment</p></div>",
+    "4_2_1": "<p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Cores in every answer: Safety, efficiency, and teamwork:</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🧭 Principle Or Story 🏰&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">⚙️ Action&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The story 🏰:&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🎭 Human Moment</p>",
+    "4_3_0": "<p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Cores in every answer: Safety, efficiency, and teamwork:</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🧭 Principle Or Story 🏰&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">⚙️ Action&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The story 🏰:&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🎭 Human Moment</p>",
+    "4_3_1": "<p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Cores in every answer: Safety, efficiency, and teamwork:</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🧭 Principle Or Story 🏰&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">⚙️ Action&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The story 🏰:&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🎭 Human Moment</p>",
+    "4_4_0": "<p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Cores in every answer: Safety, efficiency, and teamwork:</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🧭 Principle Or Story 🏰&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">⚙️ Action&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The story 🏰:&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🎭 Human Moment</p>",
+    "4_4_1": "<p data-pm-slice=\"0 0 []\" style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">Cores in every answer: Safety, efficiency, and teamwork:</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🧭 Principle Or Story 🏰&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">⚙️ Action&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔵 Before&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟢 Now&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🟡 Later&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🔴 Prevent&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">The story 🏰:&nbsp;</p><p style=\"caret-color: rgb(0, 0, 0); color: rgb(0, 0, 0);\">🎭 Human Moment</p>"
+  },
+  "checked": {
+    "0_0_0": true,
+    "0_0_1": true,
+    "0_0_2": true,
+    "0_0_3": true,
+    "0_2_2": true,
+    "0_2_1": true,
+    "0_2_0": true,
+    "0_1_3": true,
+    "0_1_2": true,
+    "0_1_1": true,
+    "0_1_0": true,
+    "0_3_2": true,
+    "0_3_1": true,
+    "0_3_0": true,
+    "0_4_2": true,
+    "0_4_1": true,
+    "0_9_0": true,
+    "0_9_1": true,
+    "0_6_0": true,
+    "0_6_1": true,
+    "2_3_0": true,
+    "2_3_1": true,
+    "2_1_2": true,
+    "2_1_1": true,
+    "2_1_0": true,
+    "2_2_1": true,
+    "2_2_0": true,
+    "2_0_0": true,
+    "2_0_1": true,
+    "2_0_2": true,
+    "4_0_0": true,
+    "4_0_1": true,
+    "4_1_0": true,
+    "4_1_1": true,
+    "4_1_2": true
+  },
+  "wrong": {
+    "4_1_2": 1,
+    "5_1_2": 1,
+    "3_5_3": 1,
+    "1_8_0": 1
+  }
+};
+const LS_KEY = 'ent_interview_master_v1';
+function lsLoad() {
+  try { var raw = localStorage.getItem(LS_KEY); if (raw) return JSON.parse(raw); } catch(e) {}
+  return null;
+}
+function lsSave(obj) {
+  try { localStorage.setItem(LS_KEY, JSON.stringify(obj)); return true; } catch(e) { return false; }
+}
+
+// ── RichTextEditor ────────────────────────────────────────────
+function RichTextEditor({ value, onChange, placeholder }) {
+  var ref = React.useRef(null);
+  var isOwn = React.useRef(false);
+  var savedSel = React.useRef(null);
+  var lastHigh = React.useRef('#FFE99B');
+  var [showColors, setShowColors] = React.useState(false);
+  var [showHigh, setShowHigh] = React.useState(false);
+
+  React.useEffect(function() {
+    if (ref.current && !isOwn.current && document.activeElement !== ref.current) {
+      ref.current.innerHTML = value || '';
+    }
+  }, [value]);
+
+  function saveSel() { var s = window.getSelection(); if (s && s.rangeCount > 0) savedSel.current = s.getRangeAt(0).cloneRange(); }
+  function restSel() { if (!savedSel.current || !ref.current) return; ref.current.focus(); var s = window.getSelection(); if (s) { s.removeAllRanges(); s.addRange(savedSel.current); } }
+  function handleInput() { isOwn.current = true; if (ref.current) onChange(ref.current.innerHTML); setTimeout(function(){ isOwn.current = false; }, 0); }
+  function cmd(c, v) { restSel(); document.execCommand(c, false, v || null); setTimeout(handleInput, 0); }
+  function closeAll() { setShowColors(false); setShowHigh(false); }
+
+  function clearFontSizes(node) { if (node.nodeType === 1 && node.style && node.style.fontSize) node.style.fontSize = ''; for (var c = 0; c < node.childNodes.length; c++) clearFontSizes(node.childNodes[c]); }
+  function applyFontPx(px) {
+    var sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
+    var range = sel.getRangeAt(0);
+    var frag = range.extractContents();
+    clearFontSizes(frag);
+    var span = document.createElement('span');
+    span.style.fontSize = px + 'px';
+    span.appendChild(frag);
+    range.insertNode(span);
+    var nr = document.createRange(); nr.selectNodeContents(span);
+    sel.removeAllRanges(); sel.addRange(nr);
+    setTimeout(handleInput, 0);
+  }
+  function stepFont(dir) {
+    var SIZES = [10,12,14,16,18,20,24,28,32,36,42,48,64];
+    var sel = window.getSelection();
+    if (!sel || sel.rangeCount === 0 || sel.isCollapsed) return;
+    var node = sel.anchorNode; if (node && node.nodeType === 3) node = node.parentElement;
+    var currentPx = 14;
+    while (node && node !== ref.current) { var fs = node.style && node.style.fontSize; if (fs) { currentPx = parseInt(fs); break; } node = node.parentElement; }
+    var idx = 2;
+    for (var i = 0; i < SIZES.length; i++) { if (Math.abs(SIZES[i] - currentPx) < Math.abs(SIZES[idx] - currentPx)) idx = i; }
+    applyFontPx(SIZES[Math.max(0, Math.min(SIZES.length - 1, idx + dir))]);
+  }
+  function resetFont() { applyFontPx(14); }
+  function applyHighlight(c) {
+    if (c !== 'transparent') lastHigh.current = c;
+    if (c === 'transparent') { document.execCommand('removeFormat', false, null); }
+    else { var ok = document.execCommand('hiliteColor', false, c); if (!ok) document.execCommand('backColor', false, c); }
+    handleInput(); closeAll();
+  }
+  function handleKeyDown(e) {
+    var mod = e.metaKey || e.ctrlKey;
+    if (mod && (e.key === 'b' || e.key === 'B')) { e.preventDefault(); cmd('bold'); return; }
+    if (mod && (e.key === 'i' || e.key === 'I')) { e.preventDefault(); cmd('italic'); return; }
+    if (mod && (e.key === 'u' || e.key === 'U')) { e.preventDefault(); cmd('underline'); return; }
+    if (e.altKey && (e.code === 'Equal' || e.code === 'NumpadAdd')) { e.preventDefault(); stepFont(1); return; }
+    if (e.altKey && (e.code === 'Minus' || e.code === 'NumpadSubtract')) { e.preventDefault(); stepFont(-1); return; }
+    if (e.altKey && (e.code === 'Digit0' || e.code === 'Numpad0')) { e.preventDefault(); resetFont(); return; }
+    if (e.altKey && e.code === 'KeyH') { e.preventDefault(); applyHighlight(lastHigh.current); }
+  }
+  var COLORS = ['#000000','#D85A30','#D4537E','#534AB7','#1D9E75','#378ADD','#C88A00','#639922','#888888'];
+  var HIGHS  = ['#FFE99B','#FFD700','#B5F5B5','#ADD8E6','#FFB6C1','#DDD8F8','transparent'];
+  var btn = {fontSize:12,padding:'3px 6px',borderRadius:5,border:'1px solid #e0ddd5',background:'#fff',cursor:'pointer',fontFamily:'inherit',lineHeight:'1.4',minWidth:24,textAlign:'center'};
+
+  return (
+    <div style={{ border:'1.5px solid #e6e3da', borderRadius:7, background:'#fff', marginTop:8, position:'relative' }}>
+      <div style={{ display:'flex', flexWrap:'wrap', gap:3, padding:'5px 8px', borderBottom:'1px solid #efece4', background:'#f6f4ee', alignItems:'center', borderRadius:'5px 5px 0 0' }}>
+        <button onMouseDown={function(e){e.preventDefault();saveSel();cmd('bold');}} style={Object.assign({},btn,{fontWeight:800})} title="Bold (⌘B)">B</button>
+        <button onMouseDown={function(e){e.preventDefault();saveSel();cmd('italic');}} style={Object.assign({},btn,{fontStyle:'italic'})} title="Italic (⌘I)">I</button>
+        <button onMouseDown={function(e){e.preventDefault();saveSel();cmd('underline');}} style={Object.assign({},btn,{textDecoration:'underline'})} title="Underline (⌘U)">U</button>
+        <div style={{width:1,height:18,background:'#ddd',margin:'0 2px'}} />
+        <button onMouseDown={function(e){e.preventDefault();stepFont(1);}} style={btn} title="Bigger (⌥=)">A+</button>
+        <button onMouseDown={function(e){e.preventDefault();stepFont(-1);}} style={btn} title="Smaller (⌥-)">A−</button>
+        <div style={{width:1,height:18,background:'#ddd',margin:'0 2px'}} />
+        <div style={{position:'relative'}}>
+          <button onMouseDown={function(e){e.preventDefault();saveSel();setShowColors(function(v){return !v;});setShowHigh(false);}} style={btn} title="Text color"><span style={{fontWeight:800,color:'#D85A30'}}>A</span></button>
+          {showColors && (
+            <div style={{position:'absolute',top:'110%',left:0,zIndex:300,background:'#fff',border:'1px solid #e6e3da',borderRadius:8,padding:8,display:'flex',flexWrap:'wrap',gap:4,width:120,boxShadow:'0 4px 16px rgba(0,0,0,0.12)'}}>
+              {COLORS.map(function(c){ return (<div key={c} onMouseDown={function(e){e.preventDefault();restSel();document.execCommand('foreColor',false,c);handleInput();closeAll();}} style={{width:22,height:22,background:c,borderRadius:4,cursor:'pointer',border:'1.5px solid transparent'}} />); })}
+            </div>
+          )}
+        </div>
+        <div style={{position:'relative'}}>
+          <button onMouseDown={function(e){e.preventDefault();saveSel();setShowHigh(function(v){return !v;});setShowColors(false);}} style={btn} title="Highlight (⌥H)"><span style={{background:'#FFD700',padding:'0 3px',fontWeight:700,fontSize:11}}>H</span></button>
+          {showHigh && (
+            <div style={{position:'absolute',top:'110%',left:0,zIndex:300,background:'#fff',border:'1px solid #e6e3da',borderRadius:8,padding:8,display:'flex',flexWrap:'wrap',gap:4,width:120,boxShadow:'0 4px 16px rgba(0,0,0,0.12)'}}>
+              {HIGHS.map(function(c){ return (<div key={c} onMouseDown={function(e){e.preventDefault();restSel();applyHighlight(c);}} style={{width:22,height:22,background:c==='transparent'?'repeating-linear-gradient(45deg,#ccc,#ccc 3px,#fff 3px,#fff 6px)':c,borderRadius:4,cursor:'pointer',border:'1.5px solid #e6e3da'}} />); })}
+            </div>
+          )}
+        </div>
+      </div>
+      <div ref={ref} contentEditable={true} suppressContentEditableWarning={true} onInput={handleInput} onKeyDown={handleKeyDown} onBlur={saveSel}
+        style={{minHeight:80,padding:'10px 12px',outline:'none',fontSize:14,lineHeight:1.7,color:'#333',background:'#fff',borderRadius:'0 0 5px 5px'}} />
+      {(!value || value === '') && <div style={{position:'absolute',bottom:10,left:12,color:'#bbb',fontSize:13,pointerEvents:'none',fontStyle:'italic'}}>{placeholder||'Write your answer here...'}</div>}
+    </div>
+  );
+}
+
+// ── QuestionCard ──────────────────────────────────────────────
+function QuestionCard({ qObj, checked, onCheck, answer, onAnswer, wrongCount }) {
+  var [showAns, setShowAns] = React.useState(false);
+  var done = !!checked[qObj.id];
+  var missed = (wrongCount || 0) > 0;
+  var flagged = isYahya(qObj.id, answer);
+  return (
+    <div style={{ background: done ? '#f4fbf7' : '#fff', border: '1.5px solid ' + (done ? '#b8e6cc' : missed ? '#f9c8b8' : '#ebe8e0'), borderRadius: 10, marginBottom: 8, overflow: 'hidden' }}>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 10, padding: '11px 14px' }}>
+        <input type="checkbox" checked={done} onChange={function(){ onCheck(qObj.id); }} />
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', gap: 8 }}>
+            <span style={{ fontSize: 13.5, color: done ? '#2a7a50' : '#1a1a1a', textDecoration: done ? 'line-through' : 'none', opacity: done ? 0.7 : 1 }}>{qObj.question}</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 5, flexShrink: 0 }}>
+              {flagged && <span title="Old answer written for a different CV (Yahya). Rewrite in your voice." style={{ background: '#fdeccf', color: '#9a6a16', borderRadius: 99, fontSize: 10, fontWeight: 700, padding: '1px 6px' }}>⚠ old</span>}
+              {missed && <span style={{ background: '#fcd3c0', color: '#b03a1a', borderRadius: 99, fontSize: 10, fontWeight: 700, padding: '1px 6px' }}>✗ {wrongCount}</span>}
+              <button onClick={function(){ setShowAns(function(a){ return !a; }); }} style={{ fontSize: 11, padding: '3px 8px', borderRadius: 6, border: '1px solid #e0ddd5', background: showAns ? '#f0eee7' : '#fff', cursor: 'pointer', color: '#555', fontWeight: 600 }}>
+                {showAns ? 'Hide' : (answer ? 'Answer •' : 'Answer')}
+              </button>
+            </div>
+          </div>
+          {showAns && flagged && (
+            <div style={{ marginTop: 8, padding: '8px 11px', background: '#fdf6e9', border: '1px solid #f0dcb4', borderRadius: 7, fontSize: 12.5, color: '#8a6516' }}>
+              ⚠ This saved answer was written for a different candidate's CV. Use it only as a structure reference — rewrite it in your own voice and story.
+            </div>
+          )}
+          {showAns && <RichTextEditor value={answer || ''} onChange={function(val){ onAnswer(qObj.id, val); }} placeholder="Write your answer here..." />}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── SubgroupSection ───────────────────────────────────────────
+function SubgroupSection({ cat, catIdx, sg, sgIdx, filter, checked, onCheck, answers, onAnswer, wrongCounts }) {
+  var [open, setOpen] = React.useState(false);
+  var questions = allQuestions.filter(function(q){ return q.catIdx === catIdx && q.sgIdx === sgIdx; });
+  var visible = questions;
+  if (filter === 'incomplete') visible = questions.filter(function(q){ return !checked[q.id]; });
+  if (filter === 'review') visible = questions.filter(function(q){ return (wrongCounts[q.id] || 0) > 0; });
+  var done = questions.filter(function(q){ return checked[q.id]; }).length;
+  var total = questions.length;
+  var pct = total > 0 ? Math.round(done/total*100) : 0;
+  if (filter !== 'all' && visible.length === 0) return null;
+  return (
+    <div style={{ marginBottom: 6 }}>
+      <div onClick={function(){ setOpen(function(o){ return !o; }); }} style={{ display: 'flex', alignItems: 'center', gap: 10, padding: '9px 12px', borderRadius: open ? '8px 8px 0 0' : 8, background: '#f6f4ee', cursor: 'pointer', userSelect: 'none', border: '1px solid ' + (open ? cat.color : '#ebe8e0') }}>
+        <span style={{ flex: 1, fontSize: 13.5, fontWeight: 600, color: '#2a2a2a' }}>{sg.name}</span>
+        <span style={{ fontSize: 12, color: pct === 100 ? '#1D9E75' : '#999', fontWeight: 600, minWidth: 36, textAlign: 'right' }}>{done}/{total}</span>
+        <div style={{ width: 52, height: 5, background: '#e6e3da', borderRadius: 99, overflow: 'hidden', flexShrink: 0 }}>
+          <div style={{ width: pct+'%', height: '100%', background: pct === 100 ? '#1D9E75' : cat.color, borderRadius: 99 }} />
+        </div>
+        <span style={{ fontSize: 14, color: '#bbb', transform: open ? 'rotate(90deg)' : 'none', transition: 'transform 0.15s' }}>›</span>
+      </div>
+      {open && (
+        <div style={{ border: '1px solid ' + cat.color, borderTop: 'none', borderRadius: '0 0 8px 8px', padding: '10px', background: '#fff' }}>
+          {visible.length === 0 ? <div style={{ padding: '12px', color: '#999', fontSize: 13, textAlign: 'center' }}>No questions match this filter.</div>
+            : visible.map(function(q) { return <QuestionCard key={q.id} qObj={q} checked={checked} onCheck={onCheck} answer={answers[q.id]} onAnswer={onAnswer} wrongCount={wrongCounts[q.id] || 0} />; })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── CategorySection ───────────────────────────────────────────
+function CategorySection({ cat, catIdx, filter, checked, onCheck, answers, onAnswer, wrongCounts }) {
+  var [open, setOpen] = React.useState(false);
+  var catQs = allQuestions.filter(function(q){ return q.catIdx === catIdx; });
+  var done = catQs.filter(function(q){ return checked[q.id]; }).length;
+  var total = catQs.length;
+  var pct = total > 0 ? Math.round(done/total*100) : 0;
+  var hasVisible = filter === 'all' || (filter === 'incomplete' && catQs.some(function(q){ return !checked[q.id]; })) || (filter === 'review' && catQs.some(function(q){ return (wrongCounts[q.id] || 0) > 0; }));
+  if (!hasVisible) return null;
+  return (
+    <div style={{ marginBottom: 10 }}>
+      <div onClick={function(){ setOpen(function(o){ return !o; }); }} style={{ cursor: 'pointer', borderRadius: open ? '10px 10px 0 0' : 10, border: '1.5px solid ' + (open ? cat.color : '#ebe8e0'), background: open ? cat.bg : '#fbfaf7', padding: '13px 16px', display: 'flex', alignItems: 'center', gap: 12, userSelect: 'none' }}>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+            <span style={{ fontWeight: 700, fontSize: 14, color: open ? cat.color : '#1a1a1a' }}>{cat.name}</span>
+            <span style={{ fontSize: 13, fontWeight: 700, color: cat.color }}>{done}/{total} <span style={{ fontWeight: 400, color: '#999', fontSize: 12 }}>({pct}%)</span></span>
+          </div>
+          <div style={{ height: 6, background: '#e6e3da', borderRadius: 99, overflow: 'hidden' }}>
+            <div style={{ width: pct+'%', height: '100%', background: cat.color, borderRadius: 99, transition: 'width 0.4s' }} />
+          </div>
+        </div>
+        <span style={{ fontSize: 18, color: cat.color, transform: open ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s', lineHeight: 1 }}>›</span>
+      </div>
+      {open && (
+        <div style={{ border: '1.5px solid ' + cat.color, borderTop: 'none', borderRadius: '0 0 10px 10px', background: '#fff', padding: '12px' }}>
+          {cat.subgroups.map(function(sg, si) { return <SubgroupSection key={si} cat={cat} catIdx={catIdx} sg={sg} sgIdx={si} filter={filter} checked={checked} onCheck={onCheck} answers={answers} onAnswer={onAnswer} wrongCounts={wrongCounts} />; })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── StudyView ─────────────────────────────────────────────────
+function StudyView({ filter, setFilter, checked, onCheck, answers, onAnswer, wrongCounts }) {
+  var total = allQuestions.length;
+  var done = allQuestions.filter(function(q){ return checked[q.id]; }).length;
+  var pct = total > 0 ? Math.round(done/total*100) : 0;
+  var reviewCount = allQuestions.filter(function(q){ return (wrongCounts[q.id] || 0) > 0; }).length;
+  return (
+    <div className="fade">
+      <div style={{ background: '#fff', borderRadius: 12, padding: '16px 18px', marginBottom: 20, border: '1.5px solid #ebe8e0' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+          <span style={{ fontWeight: 700, fontSize: 15 }}>Overall progress</span>
+          <span style={{ fontWeight: 800, fontSize: 20, color: '#534AB7' }}>{pct}%</span>
+        </div>
+        <div style={{ height: 10, background: '#e6e3da', borderRadius: 99, overflow: 'hidden', marginBottom: 8 }}>
+          <div style={{ width: pct+'%', height: '100%', background: pct === 100 ? '#1D9E75' : '#534AB7', borderRadius: 99, transition: 'width 0.5s' }} />
+        </div>
+        <div style={{ display: 'flex', gap: 16, fontSize: 13, color: '#666' }}>
+          <span><b style={{ color: '#1D9E75' }}>{done}</b> done</span>
+          <span><b style={{ color: '#999' }}>{total - done}</b> remaining</span>
+          {reviewCount > 0 && <span><b style={{ color: '#D85A30' }}>{reviewCount}</b> need review</span>}
+        </div>
+      </div>
+      <div style={{ display: 'flex', gap: 6, marginBottom: 16, flexWrap: 'wrap' }}>
+        {[['all','All Questions'],['incomplete','Incomplete'],['review','Needs Review']].map(function(pair) {
+          var f = pair[0], l = pair[1];
+          return (<button key={f} onClick={function(){ setFilter(f); }} style={{ padding: '7px 14px', borderRadius: 8, border: '1.5px solid ' + (filter === f ? '#534AB7' : '#e0ddd5'), background: filter === f ? '#534AB7' : '#fff', color: filter === f ? '#fff' : '#555', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>{l}{f === 'review' && reviewCount > 0 ? ' (' + reviewCount + ')' : ''}</button>);
+        })}
+      </div>
+      {data.categories.map(function(cat, ci) { return <CategorySection key={ci} cat={cat} catIdx={ci} filter={filter} checked={checked} onCheck={onCheck} answers={answers} onAnswer={onAnswer} wrongCounts={wrongCounts} />; })}
+    </div>
+  );
+}
+
+// ── SpineView ─────────────────────────────────────────────────
+function SpineView() {
+  return (
+    <div className="fade">
+      <div style={{ background: '#fff', border: '1.5px solid #ebe8e0', borderLeft: '3px solid #D8A23A', borderRadius: 10, padding: '16px 20px', marginBottom: 24 }}>
+        <div style={{ fontSize: 11, fontWeight: 700, letterSpacing: 0.6, textTransform: 'uppercase', color: '#b58a2e', marginBottom: 6 }}>The spine</div>
+        <div style={{ fontSize: 18, fontStyle: 'italic', color: '#3a3a38', lineHeight: 1.4 }}>"{SPINE.line}"</div>
+      </div>
+      <h3 style={{ fontSize: 17, fontWeight: 800, marginBottom: 4 }}>The elimination arc</h3>
+      <p style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>Every "why ENT" answer hangs off this. Not a late default — a process where each option was tested and ENT survived.</p>
+      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, marginBottom: 28 }}>
+        {SPINE.steps.map(function(s, i) {
+          return (
+            <div key={i} style={{ flex: '1 1 150px', minWidth: 150, background: s.chosen ? '#FBF3E2' : '#fff', border: '1.5px solid ' + (s.chosen ? '#D8A23A' : '#ebe8e0'), borderRadius: 10, padding: '13px 15px' }}>
+              <div style={{ fontSize: 10.5, fontFamily: 'monospace', color: '#aaa' }}>{s.step}</div>
+              <div style={{ fontWeight: 700, fontSize: 15, marginTop: 3, textDecoration: s.killed ? 'line-through' : 'none', textDecorationColor: '#e08a7a', color: s.chosen ? '#9a6a16' : '#2a2a28' }}>{s.label}</div>
+              <div style={{ fontSize: 12, color: '#777', marginTop: 5, lineHeight: 1.45 }}>{s.why}</div>
+            </div>
+          );
+        })}
+      </div>
+      <h3 style={{ fontSize: 17, fontWeight: 800, marginBottom: 4 }}>Why ENT — the real version</h3>
+      <p style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>Drop the "mix of clinic and surgery" line. Use the craft framing.</p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 12 }}>
+        {SPINE.whyENT.map(function(col, i) {
+          return (
+            <div key={i} style={{ background: '#f3f8f5', border: '1px solid #d4e8dd', borderRadius: 11, padding: '16px 18px' }}>
+              <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#1D9E75', marginBottom: 10 }}>{col.h}</div>
+              {col.items.map(function(it, j){ return <div key={j} style={{ fontSize: 13, color: '#555', padding: '4px 0 4px 14px', position: 'relative', lineHeight: 1.45 }}><span style={{ position: 'absolute', left: 0, color: '#aaa' }}>—</span>{it}</div>; })}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── PortfolioView ─────────────────────────────────────────────
+function PortfolioView() {
+  return (
+    <div className="fade">
+      <h3 style={{ fontSize: 17, fontWeight: 800, marginBottom: 4 }}>Portfolio map</h3>
+      <p style={{ fontSize: 13, color: '#888', marginBottom: 20 }}>Every piece of evidence sorted into the three buckets a panel scores you on. The framework under each is how you structure an answer from it.</p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: 16 }}>
+        {BUCKETS.map(function(b, i) {
+          return (
+            <div key={i} style={{ border: '1px solid #ebe8e0', borderRadius: 14, overflow: 'hidden', background: '#fff' }}>
+              <div style={{ padding: '18px 18px 14px', background: b.bg, borderBottom: '1px solid rgba(0,0,0,0.05)' }}>
+                <div style={{ fontSize: 11, fontFamily: 'monospace', letterSpacing: 0.5, textTransform: 'uppercase', color: b.color }}>{b.tag}</div>
+                <div style={{ fontSize: 19, fontWeight: 800, margin: '5px 0 3px', color: '#2a2a28' }}>{b.name}</div>
+                <div style={{ fontSize: 11.5, fontFamily: 'monospace', color: '#888' }}>{b.framework}</div>
+              </div>
+              <div style={{ padding: '12px 12px 16px' }}>
+                {b.ev.map(function(e, j){
+                  return (<div key={j} style={{ borderRadius: 9, padding: '11px 13px', marginBottom: 7, background: '#fbfaf7', border: '1px solid #f0ede5' }}>
+                    <div style={{ fontWeight: 600, fontSize: 13.5, marginBottom: 2 }}>{e[0]}</div>
+                    <div style={{ fontSize: 12, color: '#888', lineHeight: 1.45 }}>{e[1]}</div>
+                  </div>);
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── StrategyView ──────────────────────────────────────────────
+function StrategyView() {
+  var cards = [
+    { h: 'Traps to avoid', color: '#C88A00', bg: '#FBF3E2', items: STRATEGY.warn },
+    { h: 'Your edge', color: '#1D9E75', bg: '#E1F5EE', items: STRATEGY.edge },
+    { h: 'Still to forge', color: '#534AB7', bg: '#EEEDFE', items: STRATEGY.gap },
+  ];
+  return (
+    <div className="fade">
+      <h3 style={{ fontSize: 17, fontWeight: 800, marginBottom: 4 }}>Strategy notes</h3>
+      <p style={{ fontSize: 13, color: '#888', marginBottom: 20 }}>The meta-layer — how to run the room, not just answer the questions.</p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14, marginBottom: 28 }}>
+        {cards.map(function(c, i) {
+          return (
+            <div key={i} style={{ background: c.bg, border: '1px solid rgba(0,0,0,0.06)', borderRadius: 12, padding: '16px 18px' }}>
+              <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: c.color, marginBottom: 10 }}>{c.h}</div>
+              {c.items.map(function(it, j){ return <div key={j} style={{ fontSize: 13, color: '#555', padding: '5px 0 5px 14px', position: 'relative', lineHeight: 1.45 }}><span style={{ position: 'absolute', left: 0, color: '#999' }}>—</span>{it}</div>; })}
+            </div>
+          );
+        })}
+      </div>
+      <h3 style={{ fontSize: 17, fontWeight: 800, marginBottom: 4 }}>Three frameworks, three buckets</h3>
+      <p style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>Identify the bucket in one second, deploy the framework, fill it with real material.</p>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 14 }}>
+        {STRATEGY.frameworks.map(function(f, i) {
+          var colors = ['#D85A30','#1D9E75','#534AB7']; var bgs = ['#FAECE7','#E1F5EE','#EEEDFE'];
+          return (
+            <div key={i} style={{ border: '1px solid #ebe8e0', borderRadius: 12, overflow: 'hidden', background: '#fff' }}>
+              <div style={{ padding: '14px 16px', background: bgs[i] }}>
+                <div style={{ fontSize: 11, fontFamily: 'monospace', letterSpacing: 0.5, color: colors[i] }}>{f[0]}</div>
+                <div style={{ fontSize: 16, fontWeight: 800, margin: '4px 0 2px' }}>{f[1]}</div>
+                <div style={{ fontSize: 11, fontFamily: 'monospace', color: '#999' }}>{f[2]}</div>
+              </div>
+              <div style={{ padding: '12px 16px', fontSize: 12.5, color: '#777', lineHeight: 1.5 }}>{f[3]}</div>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── CenterView ────────────────────────────────────────────────
+function CenterView({ onStartCenterQuiz }) {
+  var [openIdx, setOpenIdx] = React.useState(null);
+  var tierColor = { '1': '#1D9E75', '3': '#D85A30' };
+  return (
+    <div className="fade">
+      <p style={{ fontSize: 13, color: '#888', marginBottom: 16 }}>Click a center for its panel, signals, and your tier. Use "Quiz this center" to drill 4 representative questions.</p>
+      <div style={{ display: 'grid', gap: 12, gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))' }}>
+        {data.centers.map(function(c, i) {
+          var isOpen = openIdx === i;
+          var tier = c.you.indexOf('TIER 1') !== -1 ? '1' : (c.you.indexOf('TIER 3') !== -1 ? '3' : '2');
+          var sizeColor = c.questionCount >= 20 ? '#D85A30' : c.questionCount >= 8 ? '#C88A00' : '#639922';
+          return (
+            <div key={i} style={{ borderRadius: 12, border: '1.5px solid ' + (isOpen ? '#534AB7' : '#ebe8e0'), overflow: 'hidden', background: '#fff' }}>
+              <div onClick={function(){ setOpenIdx(isOpen ? null : i); }} style={{ padding: '14px 16px', background: isOpen ? '#EEEDFE' : '#fbfaf7', display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    <span style={{ fontWeight: 700, fontSize: 15, color: isOpen ? '#534AB7' : '#1a1a1a' }}>{c.name}</span>
+                    {tier !== '2' && <span style={{ background: tierColor[tier], color: '#fff', borderRadius: 5, fontSize: 10, fontWeight: 700, padding: '1px 7px' }}>TIER {tier}</span>}
+                  </div>
+                  <div style={{ fontSize: 12, color: '#888', marginTop: 2 }}>{c.style}</div>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span style={{ background: sizeColor, color: '#fff', borderRadius: 99, fontSize: 12, fontWeight: 700, padding: '3px 10px' }}>{c.questionCount}q</span>
+                  <span style={{ fontSize: 16, color: '#bbb', transform: isOpen ? 'rotate(90deg)' : 'none', transition: 'transform 0.2s' }}>›</span>
+                </div>
+              </div>
+              {isOpen && (
+                <div style={{ padding: '14px 16px', background: '#fff', borderTop: '1px solid #ebe8e0' }}>
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#888', marginBottom: 5 }}>Likely panel</div>
+                    <div style={{ fontSize: 12.5, color: '#555', lineHeight: 1.5 }}>{c.panel}</div>
+                  </div>
+                  <div style={{ marginBottom: 12 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#888', marginBottom: 6 }}>Focus areas</div>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+                      {c.emphasis.map(function(e, j){ return <span key={j} style={{ background: '#f3f1ea', borderRadius: 6, fontSize: 12, padding: '4px 9px', color: '#555' }}>{e}</span>; })}
+                    </div>
+                  </div>
+                  <div style={{ background: '#FBF3E2', borderRadius: 8, padding: '10px 12px', borderLeft: '3px solid #C88A00', marginBottom: 10 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#b58a2e', marginBottom: 4 }}>Unique signal</div>
+                    <div style={{ fontSize: 12.5, color: '#6a5a32', lineHeight: 1.5 }}>{c.unique}</div>
+                  </div>
+                  <div style={{ background: '#EEF6F1', borderRadius: 8, padding: '10px 12px', borderLeft: '3px solid #1D9E75', marginBottom: 12 }}>
+                    <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#1D9E75', marginBottom: 4 }}>Your play</div>
+                    <div style={{ fontSize: 12.5, color: '#2a6a4c', lineHeight: 1.5 }}>{c.you}</div>
+                  </div>
+                  <button onClick={function(){ onStartCenterQuiz(c); }} style={{ width: '100%', padding: '10px', borderRadius: 8, border: 'none', background: '#534AB7', color: '#fff', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>Quiz this center (4 questions) →</button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// ── QuizSession ───────────────────────────────────────────────
+function QuizSession({ queue, centerName, answers, setWrongCounts }) {
+  var [idx, setIdx] = React.useState(0);
+  var [revealed, setRevealed] = React.useState(false);
+  var [results, setResults] = React.useState([]);
+  var [sessionDone, setSessionDone] = React.useState(false);
+  var isCenter = !!centerName;
+  var currentQ = isCenter ? queue[idx] : queue[idx % queue.length];
+  if (!currentQ) return <div style={{ textAlign: 'center', padding: 40, color: '#888' }}>No questions available.</div>;
+
+  function handleResult(correct) {
+    if (!correct) { setWrongCounts(function(prev) { var next = Object.assign({}, prev); next[currentQ.id] = (prev[currentQ.id] || 0) + 1; return next; }); }
+    var newResults = results.concat([{ id: currentQ.id, question: currentQ.question, correct: correct }]);
+    setResults(newResults);
+    if (isCenter && idx + 1 >= 4) { setSessionDone(true); return; }
+    setIdx(function(i){ return i + 1; }); setRevealed(false);
+  }
+  if (sessionDone) {
+    var correctCount = results.filter(function(r){ return r.correct; }).length;
+    return (
+      <div style={{ textAlign: 'center', padding: '32px 16px' }}>
+        <div style={{ fontSize: 38, marginBottom: 10 }}>{correctCount >= 3 ? '🎉' : correctCount >= 2 ? '👍' : '💪'}</div>
+        <div style={{ fontSize: 26, fontWeight: 800, marginBottom: 6 }}>{correctCount}/4 Correct</div>
+        <div style={{ fontSize: 14, color: '#666', marginBottom: 24 }}>{centerName} session complete.</div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: 7, maxWidth: 460, margin: '0 auto 24px', textAlign: 'left' }}>
+          {results.map(function(r, i) { return (<div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: 9, padding: '9px 12px', borderRadius: 8, background: r.correct ? '#f0faf5' : '#fff5f3', border: '1px solid ' + (r.correct ? '#b8e6cc' : '#f9c0aa') }}><span style={{ fontSize: 15, flexShrink: 0, marginTop: 1 }}>{r.correct ? '✓' : '✗'}</span><span style={{ fontSize: 13, color: '#333' }}>{r.question}</span></div>); })}
+        </div>
+      </div>
+    );
+  }
+  var savedAnswer = answers[currentQ.id];
+  var flagged = isYahya(currentQ.id, savedAnswer);
+  var qLabel = isCenter ? (idx + 1) + ' / 4' : 'Q' + (idx + 1);
+  return (
+    <div style={{ maxWidth: 580, margin: '0 auto' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 14, flexWrap: 'wrap' }}>
+        {centerName && <span style={{ background: '#EEEDFE', color: '#534AB7', borderRadius: 7, fontSize: 12, fontWeight: 700, padding: '3px 10px' }}>{centerName}</span>}
+        <span style={{ fontSize: 13, color: '#888' }}>Question {qLabel}</span>
+        <span style={{ marginLeft: 'auto', background: currentQ.catBg, color: currentQ.catColor, borderRadius: 6, fontSize: 11, padding: '2px 8px', fontWeight: 600 }}>{currentQ.sgName}</span>
+      </div>
+      <div style={{ background: '#fff', borderRadius: 14, border: '1.5px solid #ebe8e0', padding: '26px 22px', marginBottom: 16, minHeight: 110, display: 'flex', alignItems: 'center' }}>
+        <p style={{ fontSize: 18, fontWeight: 600, lineHeight: 1.5, color: '#1a1a1a' }}>{currentQ.question}</p>
+      </div>
+      {!revealed ? (
+        <button onClick={function(){ setRevealed(true); }} style={{ width: '100%', padding: '13px', borderRadius: 10, border: 'none', background: '#534AB7', color: '#fff', fontWeight: 700, fontSize: 15, cursor: 'pointer' }}>Reveal My Answer</button>
+      ) : (
+        <div>
+          <div style={{ background: '#faf9f4', borderRadius: 12, border: '1.5px solid #e6e3da', padding: '16px 18px', marginBottom: 12 }}>
+            <div style={{ fontSize: 11, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#534AB7', marginBottom: 8 }}>Your answer {flagged && <span style={{ color: '#9a6a16' }}>⚠ old / not your CV</span>}</div>
+            {savedAnswer ? <div style={{ fontSize: 14, color: '#333', lineHeight: 1.75 }} dangerouslySetInnerHTML={{ __html: savedAnswer }} /> : <p style={{ fontSize: 13, color: '#bbb', fontStyle: 'italic' }}>No answer saved yet — add one in the Study tab.</p>}
+          </div>
+          <div style={{ display: 'flex', gap: 10, marginBottom: 8 }}>
+            <button onClick={function(){ handleResult(false); }} style={{ flex: 1, padding: '12px', borderRadius: 10, border: '2px solid #f9c0aa', background: '#fff5f3', color: '#b03a20', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>✗  Missed it</button>
+            <button onClick={function(){ handleResult(true); }} style={{ flex: 1, padding: '12px', borderRadius: 10, border: '2px solid #9ddfc0', background: '#f0faf5', color: '#1a7a50', fontWeight: 700, fontSize: 14, cursor: 'pointer' }}>✓  Got it</button>
+          </div>
+          {!isCenter && <button onClick={function(){ setIdx(function(i){ return i+1; }); setRevealed(false); }} style={{ width: '100%', padding: '9px', borderRadius: 10, border: '1.5px solid #e0ddd5', background: '#fff', color: '#888', fontWeight: 600, fontSize: 13, cursor: 'pointer' }}>Skip →</button>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── QuizView ──────────────────────────────────────────────────
+function QuizView({ answers, wrongCounts, setWrongCounts, initialCenter }) {
+  var [mode, setMode] = React.useState(initialCenter ? 'center' : null);
+  var [centerName, setCenterName] = React.useState(initialCenter ? initialCenter.name : null);
+  var [queue, setQueue] = React.useState(function(){ return initialCenter ? getCenterQuestions(initialCenter) : []; });
+  var [sessionKey, setSessionKey] = React.useState(0);
+  function startRandom() { var shuffled = allQuestions.slice().sort(function(){ return Math.random() - 0.5; }); setQueue(shuffled); setMode('random'); setCenterName(null); setSessionKey(function(k){ return k+1; }); }
+  function startCenter(c) { setQueue(getCenterQuestions(c)); setMode('center'); setCenterName(c.name); setSessionKey(function(k){ return k+1; }); }
+  function reset() { setMode(null); setCenterName(null); setQueue([]); }
+  if (!mode) {
+    return (
+      <div className="fade">
+        <h3 style={{ fontSize: 17, fontWeight: 800, marginBottom: 6 }}>Quiz mode</h3>
+        <p style={{ color: '#666', fontSize: 14, marginBottom: 22 }}>Think through your answer out loud, then reveal your saved template and grade yourself.</p>
+        <div onClick={startRandom} style={{ borderRadius: 14, border: '1.5px solid #ebe8e0', background: '#fbfaf7', padding: '20px', cursor: 'pointer', maxWidth: 340, marginBottom: 24 }}>
+          <div style={{ fontSize: 30, marginBottom: 8 }}>🔀</div>
+          <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 4 }}>Random — never ending</div>
+          <div style={{ fontSize: 13, color: '#888' }}>All categories shuffled, infinite stream. Mark correct / wrong as you go.</div>
+        </div>
+        <div style={{ fontSize: 12, fontWeight: 700, textTransform: 'uppercase', letterSpacing: 0.5, color: '#888', marginBottom: 10 }}>Drill a specific center (4 questions)</div>
+        <div style={{ display: 'grid', gap: 10, gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))' }}>
+          {data.centers.map(function(c, i) { return (<div key={i} onClick={function(){ startCenter(c); }} style={{ borderRadius: 10, border: '1.5px solid #ebe8e0', background: '#fbfaf7', padding: '13px 15px', cursor: 'pointer' }}><div style={{ fontWeight: 700, fontSize: 14, marginBottom: 3 }}>{c.name}</div><div style={{ fontSize: 12, color: '#888' }}>{c.style}</div></div>); })}
+        </div>
+      </div>
+    );
+  }
+  return (
+    <div className="fade">
+      <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 22 }}>
+        <button onClick={reset} style={{ padding: '6px 12px', borderRadius: 8, border: '1.5px solid #e0ddd5', background: '#fff', cursor: 'pointer', fontSize: 13, color: '#555', fontWeight: 600 }}>← Back</button>
+        <span style={{ fontSize: 14, fontWeight: 600, color: '#333' }}>{mode === 'center' ? centerName + ' — 4 questions' : 'Random Mode'}</span>
+        {mode === 'random' && <button onClick={startRandom} style={{ marginLeft: 'auto', padding: '6px 12px', borderRadius: 8, border: '1.5px solid #e0ddd5', background: '#fff', cursor: 'pointer', fontSize: 12, color: '#666', fontWeight: 600 }}>Reshuffle</button>}
+      </div>
+      <QuizSession key={sessionKey} queue={queue} centerName={mode === 'center' ? centerName : null} answers={answers} setWrongCounts={setWrongCounts} />
+    </div>
+  );
+}
+
+// ── App ───────────────────────────────────────────────────────
+function App() {
+  var [tab, setTab] = React.useState('spine');
+  var [filter, setFilter] = React.useState('all');
+  var [quizCenter, setQuizCenter] = React.useState(null);
+  var { answers, checked, wrong: wrongCounts, updateAnswers, updateChecked, updateWrong } = useFileData();
+  function onCheck(id) { updateChecked(function(prev){ var n=Object.assign({},prev); n[id]=!prev[id]; return n; }); }
+  function onAnswer(id, val) { updateAnswers(function(prev){ var n=Object.assign({},prev); n[id]=val; return n; }); }
+  function setWrongCounts(fn) { updateWrong(fn); }
+  function handleStartCenterQuiz(center) { setQuizCenter(center); setTab('quiz'); }
+  React.useEffect(function(){ if (tab !== 'quiz') setQuizCenter(null); }, [tab]);
+
+  var tabs = [['spine','🧭 Spine'],['portfolio','🗺 Portfolio'],['study','📚 Study'],['centers','🏥 Centers'],['quiz','🧠 Quiz'],['strategy','♟ Strategy']];
+  function tabStyle(t) { return { padding: '8px 15px', borderRadius: 8, border: 'none', cursor: 'pointer', fontWeight: 600, fontSize: 13.5, background: tab===t ? '#534AB7' : 'transparent', color: tab===t ? '#fff' : '#666', transition: 'all 0.15s', whiteSpace: 'nowrap' }; }
+  var showShortcuts = (tab === 'study');
+
+  return (
+    <div>
+      <div style={{ marginBottom: 18 }}>
+        <h1 style={{ fontSize: 23, fontWeight: 800, letterSpacing: -0.5, marginBottom: 4 }}>ENT Interview Master</h1>
+        <p style={{ color: '#888', fontSize: 14 }}>SCFHS · Jeddah · {allQuestions.length} questions · answers saved to file · anchors not scripts · keep it under 90 seconds</p>
+      </div>
+      <div style={{ display: 'flex', gap: 4, background: '#f1efe8', borderRadius: 10, padding: 4, marginBottom: 14, width: 'fit-content', flexWrap: 'wrap' }}>
+        {tabs.map(function(pair){ return <button key={pair[0]} style={tabStyle(pair[0])} onClick={function(){ setTab(pair[0]); }}>{pair[1]}</button>; })}
+      </div>
+      {showShortcuts && (
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6, marginBottom: 20, padding: '8px 12px', background: '#f6f4ee', border: '1px solid #ebe8e0', borderRadius: 9 }}>
+          <span style={{ fontSize: 11, fontWeight: 700, color: '#888', textTransform: 'uppercase', letterSpacing: 0.5, alignSelf: 'center', marginRight: 4 }}>Answer shortcuts</span>
+          {[['⌘B','Bold'],['⌘I','Italic'],['⌘U','Underline'],['⌥+','Font +'],['⌥−','Font −'],['⌥0','Reset'],['⌥H','Highlight']].map(function(p){ return (<span key={p[0]} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontSize: 12, color: '#444' }}><kbd style={{ background: '#fff', border: '1px solid #d8d4c8', borderRadius: 4, padding: '1px 6px', fontSize: 11, fontFamily: 'inherit', fontWeight: 700, color: '#534AB7' }}>{p[0]}</kbd><span style={{ color: '#888' }}>{p[1]}</span></span>); })}
+        </div>
+      )}
+      {tab === 'spine' && <SpineView />}
+      {tab === 'portfolio' && <PortfolioView />}
+      {tab === 'study' && <StudyView filter={filter} setFilter={setFilter} checked={checked} onCheck={onCheck} answers={answers} onAnswer={onAnswer} wrongCounts={wrongCounts} />}
+      {tab === 'centers' && <CenterView onStartCenterQuiz={handleStartCenterQuiz} />}
+      {tab === 'quiz' && <QuizView key={quizCenter ? quizCenter.name : '__picker__'} answers={answers} wrongCounts={wrongCounts} setWrongCounts={setWrongCounts} initialCenter={quizCenter} />}
+      {tab === 'strategy' && <StrategyView />}
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+</script>
+</body>
+</html>
