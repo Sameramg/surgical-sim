@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ENT Interview Study Guide — Samer Ghabashi</title>
+<style>
+  :root{
+    --ink:#15201c;
+    --ink-soft:#3a4843;
+    --paper:#f6f4ee;
+    --card:#fffefb;
+    --line:#dcd8cc;
+    --rust:#a8472a;
+    --rust-soft:#c9613f;
+    --sage:#2f6a4f;
+    --sage-soft:#e4efe7;
+    --amber:#9a6b16;
+    --amber-soft:#f3ead2;
+    --steel:#2c4a63;
+    --steel-soft:#e2eaf0;
+    --shadow:0 1px 2px rgba(21,32,28,.05),0 8px 24px rgba(21,32,28,.06);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Iowan Old Style","Palatino Linotype",Palatino,Georgia,serif;
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    padding-bottom:120px;
+  }
+  .wrap{max-width:860px;margin:0 auto;padding:0 24px}
+
+  /* ---- HERO ---- */
+  header.hero{
+    padding:64px 0 40px;
+    border-bottom:2px solid var(--ink);
+    margin-bottom:8px;
+  }
+  .eyebrow{
+    font-family:"SF Mono",ui-monospace,"Cascadia Mono",Menlo,monospace;
+    font-size:12px;letter-spacing:.22em;text-transform:uppercase;
+    color:var(--rust);font-weight:600;margin-bottom:18px;
+  }
+  h1.title{
+    font-size:clamp(34px,6vw,56px);line-height:1.02;letter-spacing:-.02em;
+    font-weight:700;margin-bottom:14px;
+  }
+  h1.title em{font-style:italic;color:var(--rust)}
+  .sub{font-size:17px;color:var(--ink-soft);max-width:560px}
+  .meta-row{
+    display:flex;flex-wrap:wrap;gap:10px;margin-top:26px;
+  }
+  .chip{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+    padding:6px 12px;border:1px solid var(--line);border-radius:2px;
+    background:var(--card);color:var(--ink-soft);
+  }
+
+  /* ---- HOW TO USE ---- */
+  .howto{
+    background:var(--ink);color:#eae7df;border-radius:6px;
+    padding:26px 30px;margin:34px 0 10px;
+  }
+  .howto h3{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--rust-soft);margin-bottom:14px;font-weight:600;
+  }
+  .howto p{font-size:14.5px;color:#cfccc2;margin-bottom:8px}
+  .howto b{color:#fff}
+
+  /* ---- TOC ---- */
+  nav.toc{margin:40px 0 10px}
+  nav.toc h2{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:12px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--ink-soft);margin-bottom:16px;font-weight:600;
+    display:flex;align-items:center;gap:12px;
+  }
+  #lockCount{
+    font-size:11px;letter-spacing:.06em;color:var(--sage);
+    background:var(--sage-soft);border:1px solid #c4ddcc;
+    border-radius:999px;padding:3px 11px;font-weight:600;
+  }
+  .toc-cat{margin-bottom:18px}
+  .toc-cat .cat-label{
+    font-size:13px;font-weight:700;color:var(--rust);
+    text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;
+  }
+  .toc-list{list-style:none;display:grid;gap:2px}
+  .toc-list li{
+    display:flex;align-items:center;gap:10px;
+    padding:2px 8px;border-radius:3px;transition:background .15s;
+  }
+  .toc-list li:hover{background:var(--sage-soft)}
+  .toc-check{
+    appearance:none;-webkit-appearance:none;
+    width:17px;height:17px;flex:none;cursor:pointer;
+    border:1.5px solid var(--line);border-radius:4px;
+    background:var(--card);position:relative;transition:all .15s;margin:0;
+  }
+  .toc-check:hover{border-color:var(--sage)}
+  .toc-check:checked{background:var(--sage);border-color:var(--sage)}
+  .toc-check:checked::after{
+    content:"";position:absolute;left:5px;top:1.5px;
+    width:4px;height:9px;border:solid #fff;border-width:0 2px 2px 0;
+    transform:rotate(45deg);
+  }
+  .toc-list a{
+    display:flex;gap:12px;align-items:baseline;flex:1;
+    text-decoration:none;color:var(--ink);font-size:15px;
+    padding:3px 0;transition:color .15s,opacity .15s;
+  }
+  .toc-list li:has(.toc-check:checked) a{
+    color:var(--sage);opacity:.6;text-decoration:line-through;
+    text-decoration-color:#9cbfa8;
+  }
+  .toc-list .num{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:12px;color:var(--rust);min-width:26px;font-weight:600;
+  }
+  .toc-list li:has(.toc-check:checked) .num{color:var(--sage)}
+
+  /* ---- CARDS ---- */
+  section.cat{padding-top:30px}
+  .cat-head{
+    display:flex;align-items:center;gap:14px;
+    margin:28px 0 18px;padding-bottom:10px;border-bottom:1px solid var(--line);
+  }
+  .cat-head .dot{width:10px;height:10px;border-radius:50%;flex:none}
+  .cat-head h2{font-size:22px;letter-spacing:-.01em}
+  .cat-head .count{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:12px;color:var(--ink-soft);margin-left:auto;
+  }
+
+  article.q{
+    background:var(--card);border:1px solid var(--line);border-radius:7px;
+    box-shadow:var(--shadow);margin-bottom:20px;overflow:hidden;
+    scroll-margin-top:20px;
+  }
+  .q-top{
+    display:flex;gap:14px;align-items:flex-start;
+    padding:20px 24px 16px;cursor:pointer;user-select:none;
+    border-bottom:1px solid transparent;transition:border-color .2s;
+  }
+  .q.open .q-top{border-bottom-color:var(--line)}
+  .q-num{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:13px;font-weight:700;color:#fff;background:var(--rust);
+    border-radius:4px;padding:3px 8px;flex:none;margin-top:2px;
+  }
+  .q-text{flex:1}
+  .q-text h3{font-size:18.5px;line-height:1.3;letter-spacing:-.01em;font-weight:700}
+  .q-flow{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:11px;color:var(--sage);margin-top:7px;letter-spacing:.02em;
+  }
+  .toggle{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:20px;color:var(--ink-soft);flex:none;
+    transition:transform .25s;margin-top:-2px;
+  }
+  .q.open .toggle{transform:rotate(45deg)}
+
+  .q-body{
+    display:grid;grid-template-rows:0fr;
+    transition:grid-template-rows .3s ease;
+  }
+  .q.open .q-body{grid-template-rows:1fr}
+  .q-body-inner{overflow:hidden}
+  .q-pad{padding:18px 24px 24px}
+
+  .block-label{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;
+    font-weight:600;margin:0 0 9px;display:flex;align-items:center;gap:8px;
+  }
+  .block-label::after{content:"";flex:1;height:1px;background:var(--line)}
+
+  /* anchors block */
+  .anchors{
+    background:var(--amber-soft);border-left:3px solid var(--amber);
+    border-radius:0 5px 5px 0;padding:14px 18px;margin-bottom:18px;
+  }
+  .anchors .block-label{color:var(--amber)}
+  .anchors ul{list-style:none;display:grid;gap:6px}
+  .anchors li{
+    font-size:14.5px;padding-left:18px;position:relative;color:var(--ink);
+  }
+  .anchors li::before{
+    content:"▸";position:absolute;left:0;color:var(--amber);font-size:12px;top:2px;
+  }
+  .anchors li b{color:var(--rust)}
+
+  /* full answer block */
+  .full .block-label{color:var(--sage)}
+  .full .chunk{margin-bottom:14px}
+  .full .chunk:last-child{margin-bottom:0}
+  .chunk-tag{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:10.5px;letter-spacing:.05em;color:var(--sage);
+    font-weight:600;display:block;margin-bottom:4px;
+  }
+  .full p{font-size:15.5px;line-height:1.62;color:var(--ink)}
+  .full .swap{
+    background:var(--steel-soft);border-radius:5px;padding:11px 15px;
+    margin-top:8px;font-size:14px;border-left:3px solid var(--steel);
+  }
+  .full .swap .ctr{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+    color:var(--steel);font-weight:700;
+  }
+
+  .note{
+    font-size:13.5px;color:var(--ink-soft);font-style:italic;
+    margin-top:14px;padding-top:12px;border-top:1px dashed var(--line);
+  }
+
+  /* controls */
+  .controls{
+    position:sticky;top:0;z-index:20;background:var(--paper);
+    border-bottom:1px solid var(--line);padding:12px 0;margin-bottom:0;
+    display:flex;gap:10px;align-items:center;
+  }
+  .controls .wrap{display:flex;gap:10px;align-items:center;width:100%}
+  .btn{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:12px;letter-spacing:.05em;cursor:pointer;
+    border:1px solid var(--line);background:var(--card);color:var(--ink);
+    padding:8px 14px;border-radius:4px;transition:all .15s;
+  }
+  .btn:hover{border-color:var(--rust);color:var(--rust)}
+  .btn.active{background:var(--rust);color:#fff;border-color:var(--rust)}
+  .mode-hint{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:11px;color:var(--ink-soft);margin-left:auto;
+  }
+
+  /* revision mode hides full answers */
+  body.revision .full{display:none}
+  body.revision .anchors{margin-bottom:0}
+
+  /* ---- EDIT MODE ---- */
+  [contenteditable="true"]{
+    outline:none;border-radius:4px;
+    transition:background .15s,box-shadow .15s;
+  }
+  /* one editable box per answer / per anchor list, not per sentence */
+  body.editing .full[contenteditable="true"],
+  body.editing .anchors ul[contenteditable="true"]{
+    background:#fffdf6;
+    box-shadow:0 0 0 1px var(--amber-soft), inset 0 0 0 1px #efe6c8;
+    padding:14px 16px;margin:0 0 18px;
+  }
+  body.editing .full[contenteditable="true"]:focus,
+  body.editing .anchors ul[contenteditable="true"]:focus{
+    background:#fff;
+    box-shadow:0 0 0 2px var(--amber);
+  }
+  /* structural labels stay locked even inside an editable box */
+  body.editing .full .block-label,
+  body.editing .full .chunk-tag,
+  body.editing .full .swap .ctr{
+    user-select:none;opacity:.75;
+  }
+  body.editing .full[contenteditable="true"],
+  body.editing .anchors ul[contenteditable="true"]{cursor:text}
+  /* edit badge on each card */
+  .edit-badge{
+    display:none;font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:9.5px;letter-spacing:.12em;text-transform:uppercase;
+    color:var(--amber);border:1px solid var(--amber);border-radius:3px;
+    padding:2px 7px;margin-left:8px;
+  }
+  body.editing .edit-badge{display:inline-block}
+
+  /* save bar */
+  .savebar{
+    position:fixed;bottom:0;left:0;right:0;z-index:50;
+    background:var(--ink);color:#eae7df;
+    padding:14px 24px;display:none;align-items:center;gap:16px;
+    box-shadow:0 -4px 24px rgba(21,32,28,.18);
+  }
+  body.editing .savebar{display:flex}
+  .savebar .msg{font-size:13.5px;color:#cfccc2;flex:1}
+  .savebar .msg b{color:#fff}
+  .savebar button{
+    font-family:"SF Mono",ui-monospace,Menlo,monospace;
+    font-size:12px;letter-spacing:.05em;cursor:pointer;border:none;
+    padding:10px 18px;border-radius:5px;
+  }
+  .save-download{background:var(--sage);color:#fff}
+  .save-download:hover{background:#27583f}
+  .save-cancel{background:transparent;color:#cfccc2;border:1px solid #3a4843!important}
+  .save-cancel:hover{color:#fff}
+  .saved-flash{
+    position:fixed;top:70px;left:50%;transform:translateX(-50%);
+    background:var(--sage);color:#fff;padding:12px 24px;border-radius:6px;
+    font-size:14px;z-index:100;opacity:0;transition:opacity .3s;
+    pointer-events:none;box-shadow:var(--shadow);
+  }
+  .saved-flash.show{opacity:1}
+
+  footer{
+    margin-top:50px;padding-top:24px;border-top:2px solid var(--ink);
+    font-size:13px;color:var(--ink-soft);
+  }
+  footer b{color:var(--ink)}
+
+  @media (max-width:560px){
+    .wrap{padding:0 16px}
+    header.hero{padding:44px 0 30px}
+    .q-pad{padding:16px}
+    .mode-hint{display:none}
+  }
+  @media print{
+    .controls,.howto,.toggle{display:none}
+    .q-body{grid-template-rows:1fr!important}
+    .q{break-inside:avoid;box-shadow:none}
+    body{padding-bottom:0}
+  }
+</style>
+</head>
+<body>
+
+<div class="controls">
+  <div class="wrap">
+    <button class="btn active" id="btnFull" onclick="setMode('full')">Full answers</button>
+    <button class="btn" id="btnRev" onclick="setMode('revision')">Revision only</button>
+    <button class="btn" onclick="toggleAll(true)">Expand all</button>
+    <button class="btn" onclick="toggleAll(false)">Collapse all</button>
+    <button class="btn" id="btnEdit" onclick="toggleEdit()">✎ Edit mode</button>
+    <span class="mode-hint">Tap a question to open · Revision mode shows only anchors</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <header class="hero">
+    <div class="eyebrow">ORL–HNS Residency · SCFHS Jeddah · Interview Prep</div>
+    <h1 class="title">The Answer Book.<br><em>Thirty-one questions,</em> earned word by word.</h1>
+    <p class="sub">Every answer here came out of you — not a template. Framework on top, revision anchors in amber, full spoken version in green. You will say none of it verbatim. That's the point.</p>
+    <div class="meta-row">
+      <span class="chip">90 sec max</span>
+      <span class="chip">First + last carry the weight</span>
+      <span class="chip">Show, don't claim</span>
+      <span class="chip">One chunk · one job</span>
+    </div>
+  </header>
+
+  <div class="howto">
+    <h3>How to drill this</h3>
+    <p><b>Pass 1 — Full answers.</b> Read each one aloud. Time it. Mark where the words feel foreign and swap them for yours.</p>
+    <p><b>Pass 2 — Revision only.</b> Hit the toggle up top. Now you see only the anchors. Rebuild the full answer from them, out loud, no notes.</p>
+    <p><b>Pass 3 — Anki.</b> Front of card = the question. Back = the anchors only. If you can speak a clean 90 seconds from the anchors, the card's done.</p>
+    <p style="margin-top:12px"><b>Tick the box</b> next to a question in Contents once you've locked it in. Your progress saves automatically in this browser.</p>
+  </div>
+
+  <nav class="toc">
+    <h2>Contents <span id="lockCount">0 / 31 locked in</span></h2>
+
+    <div class="toc-cat">
+      <div class="cat-label">Motivation &amp; Identity</div>
+      <ul class="toc-list">
+        <li><input type="checkbox" class="toc-check" data-q="q1" aria-label="Lock in Q1"><a href="#q1"><span class="num">01</span>Why did you choose ENT?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q2" aria-label="Lock in Q2"><a href="#q2"><span class="num">02</span>Tell me about yourself</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-cat">
+      <div class="cat-label">Program &amp; Vision</div>
+      <ul class="toc-list">
+        <li><input type="checkbox" class="toc-check" data-q="q3" aria-label="Lock in Q3"><a href="#q3"><span class="num">03</span>Why our center? (5 centers)</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q4" aria-label="Lock in Q4"><a href="#q4"><span class="num">04</span>What do you know about our program?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q5" aria-label="Lock in Q5"><a href="#q5"><span class="num">05</span>Why should we rank you #1? (5 centers)</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q6" aria-label="Lock in Q6"><a href="#q6"><span class="num">06</span>How do you compare with other candidates? (5 centers)</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q7" aria-label="Lock in Q7"><a href="#q7"><span class="num">07</span>Where do you see yourself in 5 / 10 years?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q8" aria-label="Lock in Q8"><a href="#q8"><span class="num">08</span>What fellowship are you planning?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q9" aria-label="Lock in Q9"><a href="#q9"><span class="num">09</span>Which subspecialty interests you most?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q10" aria-label="Lock in Q10"><a href="#q10"><span class="num">10</span>What if we didn't accept you this year?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q11" aria-label="Lock in Q11"><a href="#q11"><span class="num">11</span>Will you change specialty if not matched?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q12" aria-label="Lock in Q12"><a href="#q12"><span class="num">12</span>Would you accept unpaid?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q13" aria-label="Lock in Q13"><a href="#q13"><span class="num">13</span>If I gave you the contract now, would you sign?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q14" aria-label="Lock in Q14"><a href="#q14"><span class="num">14</span>Do you have any questions for us?</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-cat">
+      <div class="cat-label">Behavioral &amp; Soft Skills</div>
+      <ul class="toc-list">
+        <li><input type="checkbox" class="toc-check" data-q="q15" aria-label="Lock in Q15"><a href="#q15"><span class="num">15</span>What are your strengths?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q16" aria-label="Lock in Q16"><a href="#q16"><span class="num">16</span>What is your weakness?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q17" aria-label="Lock in Q17"><a href="#q17"><span class="num">17</span>Conflict with a senior — how did you solve it?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q18" aria-label="Lock in Q18"><a href="#q18"><span class="num">18</span>Tell me about a time under pressure</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q19" aria-label="Lock in Q19"><a href="#q19"><span class="num">19</span>Tell us about your leadership skills</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q20" aria-label="Lock in Q20"><a href="#q20"><span class="num">20</span>What is the quality of a good leader?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q21" aria-label="Lock in Q21"><a href="#q21"><span class="num">21</span>What if you made a medical mistake?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q22" aria-label="Lock in Q22"><a href="#q22"><span class="num">22</span>What did you learn from being an intern?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q23" aria-label="Lock in Q23"><a href="#q23"><span class="num">23</span>Difficult patient you met?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q24" aria-label="Lock in Q24"><a href="#q24"><span class="num">24</span>What makes you angry about patients?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q25" aria-label="Lock in Q25"><a href="#q25"><span class="num">25</span>How do you deal with stress and burnout?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q26" aria-label="Lock in Q26"><a href="#q26"><span class="num">26</span>Tell us about an interesting case</a></li>
+      </ul>
+    </div>
+
+    <div class="toc-cat">
+      <div class="cat-label">Personal</div>
+      <ul class="toc-list">
+        <li><input type="checkbox" class="toc-check" data-q="q27" aria-label="Lock in Q27"><a href="#q27"><span class="num">27</span>Who is your role model?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q28" aria-label="Lock in Q28"><a href="#q28"><span class="num">28</span>Last non-medical book you read?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q29" aria-label="Lock in Q29"><a href="#q29"><span class="num">29</span>Describe yourself in 1 / 3 words</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q30" aria-label="Lock in Q30"><a href="#q30"><span class="num">30</span>If we called your reference, what would they say?</a></li>
+        <li><input type="checkbox" class="toc-check" data-q="q31" aria-label="Lock in Q31"><a href="#q31"><span class="num">31</span>Are you married? / Family vs work balance</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ============ MOTIVATION & IDENTITY ============ -->
+  <section class="cat">
+    <div class="cat-head">
+      <span class="dot" style="background:var(--rust)"></span>
+      <h2>Motivation &amp; Identity</h2>
+      <span class="count">01–02</span>
+    </div>
+
+    <!-- Q1 -->
+    <article class="q open" id="q1">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">01</span>
+        <div class="q-text">
+          <h3>Why did you choose ENT?</h3>
+          <div class="q-flow">Opening frame → Away-from → Toward · Problem-Solution Arc · Professional + Health Advocate</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Open: <b>path wasn't direct</b> — had to live each specialty from inside</li>
+            <li>Away: neuro rotation — young woman + husband, bad headache, no promises</li>
+            <li><b>"Searched her name. She didn't show up."</b></li>
+            <li>Lesson: not the loss — <b>nobody could explain why. This is the norm of the field.</b></li>
+            <li>Toward: 3 months / 3 centers → 13yo decannulated, family in tears</li>
+            <li><b>"These are purely basic necessities."</b></li>
+            <li>"It wasn't just clinic" → Andejani cadaver course, 4 programs helping unasked</li>
+            <li>Bukhari: <b>principles & outcomes known, technique is yours to develop</b></li>
+            <li>Close: <b>"where my effort has a return I can see and build on."</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>My path to ENT wasn't direct — I had to live and experience each specialty from the inside before I could be sure.</p></div>
+          <div class="chunk"><p>During my neurosurgery rotation, a young woman came in with her husband with a really bad headache. We told her husband she needed emergency surgery and that we couldn't promise anything. A couple of days later I searched for her name. She didn't show up. What stayed with me wasn't the loss — it was that nobody could explain why. This wasn't just her. This is the norm of the field.</p></div>
+          <div class="chunk"><p>So I went looking for the other end of that spectrum. After three months across three ENT centers — a 13 year old was decannulated. His family was in tears. These are purely basic necessities.</p></div>
+          <div class="chunk"><p>But it wasn't just what I saw in clinic. A cadaveric facioplasty course organized by Dr. Andejani — residents and consultants from four different programs in the same room, helping each other without being asked. Dr. Bukhari described the field in a way that sat with me — the principles and outcomes are known, but the technique is yours to develop.</p></div>
+          <div class="chunk"><p>This is where my effort has a return I can see and build on.</p></div>
+        </div>
+        <div class="note">Delivery: pause after "I couldn't learn from that / this is the norm." Let it sit one beat before the transition. No drama on the decannulation — report it, don't perform it.</div>
+      </div></div></div>
+    </article>
+
+    <!-- Q2 -->
+    <article class="q" id="q2">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">02</span>
+        <div class="q-text">
+          <h3>Tell me about yourself</h3>
+          <div class="q-flow">Identity → Journey → Proof → Human → Forward · Primacy-Recency + Bookend</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Identity: Samer, TCD Dublin → <b>"upfront about what I don't know, that discomfort pushes me"</b></li>
+            <li>Journey: that discomfort → couldn't commit without testing → <b>ENT survived</b></li>
+            <li>Proof: SimWars <b>B-team → A-team leader</b>; two ongoing ENT reviews (cochlear nerve / H&N prophylaxis)</li>
+            <li>Human: Seneca, <i>On the Shortness of Life</i> → <b>"uncomfortably relatable"</b></li>
+            <li>Forward: 6 yrs abroad = safe doctor → <b>same in ORL-HNS, build foundation</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I'm Samer Ghabashi, a Saudi medical graduate from Trinity College Dublin in Ireland. What college taught me above all else — I've always been upfront about what I don't know, and that discomfort is what pushes me.</p></div>
+          <div class="chunk"><p>That discomfort meant I couldn't commit to a specialty without testing it truly. I spent my training years living in each one seriously — ENT was what survived that process.</p></div>
+          <div class="chunk"><p>In a national simulation competition representing the college — I fought from the B-team to leading the A-team. I'm currently involved in two ongoing ENT systematic reviews — cochlear nerve diameter in hearing loss and antibiotic prophylaxis in head and neck surgery.</p></div>
+          <div class="chunk"><p>Outside medicine I find myself drawn to philosophy and history. My last book was Seneca's <em>On the Shortness of Life</em> — he argues that most people waste their lives by never fully committing to anything. I found that uncomfortably relatable.</p></div>
+          <div class="chunk"><p>In my six years abroad I learned to be a safe general doctor. I'm determined to do the same with the next five years — and build my foundation in ENT.</p></div>
+        </div>
+        <div class="note">MOH panel is in Arabic — shorten the hobby chunk to one line. The Seneca point lands well in Arabic; maps onto purposeful-living values.</div>
+      </div></div></div>
+    </article>
+  </section>
+
+  <!-- ============ PROGRAM & VISION ============ -->
+  <section class="cat">
+    <div class="cat-head">
+      <span class="dot" style="background:var(--sage)"></span>
+      <h2>Program &amp; Vision</h2>
+      <span class="count">03–14</span>
+    </div>
+
+    <!-- Q3 -->
+    <article class="q" id="q3">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">03</span>
+        <div class="q-text">
+          <h3>Why our center?</h3>
+          <div class="q-flow">What I know → What I experienced → What I want to gain · Bookend + Pyramid</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors — per center</div>
+          <ul>
+            <li><b>NGHA:</b> residents-based, self-reliant → airway emergency, team showed up unasked → scissors/Dr. Ali → Trinity baseline, want same in ENT</li>
+            <li><b>MOH:</b> oldest, multi-hospital, subspec depth, volume → electives KAMC+KFGH, Dr. Jad otology, Andejani course, Bukhari quote → volume + breadth + own technique</li>
+            <li><b>KAU/KAUH:</b> academically driven, research = currency → own the limited elective, observed standard → 2 ongoing reviews link to Zawawi/Merdad → train where standard is high</li>
+            <li><b>Fakeeh:</b> Amoodi RTP+chairman, training not service → went to Dr. Hasan directly → want training as priority, otology links cochlear review</li>
+            <li><b>KFAFH:</b> Alsolami/Suzan/Al-Bar structure → spoke to Duha/Mogharbel/Rajab, no regrets → foundation, Suzan from cadaver course</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version — by center</div>
+
+          <div class="chunk"><span class="chunk-tag">NGHA · What I know</span><p>NGHA produces residents that are self-reliant and surgically confident — and that doesn't happen by accident. During my elective I witnessed an airway emergency — nasopharyngeal mass, multiple failed intubations. What struck me wasn't how it was managed, but that the entire H&N team showed up without being asked, nobody treated it as a burden, and the debrief happened after. That culture is what I want to train inside.</p></div>
+          <div class="chunk"><span class="chunk-tag">NGHA · What I experienced</span><p>I was part of the H&N team — OR, clinics, inpatients, tumor board preparation all running simultaneously. I learned that initiative is how you earn trust, and trust is how you get in the OR. What I didn't expect was the soft skills — knowing a patient's story well enough to discuss it confidently with a pathologist or radiologist. After a long parotid surgery, Dr. Ali handed me the scissors to cut the suture. I cut the knot instead. He was frustrated. Rightfully so. I went home that night, watched the technique, bought a suture kit, practiced until I got it right. I wanted to come back better — because he's someone I genuinely respect and I couldn't leave it there.</p></div>
+          <div class="chunk"><span class="chunk-tag">NGHA · What I want to gain</span><p>Trinity taught me to handle any general case that walked through the door — not as an expert, but as someone who knew their limits and knew what to do. I want NGHA to do the same for me in ENT — and the residents-based structure is the only environment where I've seen that actually happen.</p></div>
+
+          <div class="chunk"><span class="chunk-tag">MOH · What I know</span><p>The MOH program is the most established in the region — and the only one that gives you subspecialty depth across multiple hospitals within a single training structure. Each subspecialty has its own dedicated consultant. You will never be short of cases.</p></div>
+          <div class="chunk"><span class="chunk-tag">MOH · What I experienced</span><p>I did my electives across two MOH hospitals — KAMC and KFGH. At KFGH I worked directly with Dr. Jad in otology and learned from him firsthand. At KAMC I attended a cadaveric facioplasty course organized by Dr. Andejani — consultants from four different programs in the same room, helping each other without being asked. Dr. Bukhari described the field in a way that sat with me — the principles and outcomes are known, but the technique is yours to develop.</p></div>
+          <div class="chunk"><span class="chunk-tag">MOH · What I want to gain</span><p>The volume to build confidence, the subspecialty breadth to find my direction, and the consultants who will let me develop my own technique rather than just copy theirs.</p></div>
+
+          <div class="chunk"><span class="chunk-tag">KAU / KAUH · What I know</span><p>This is the most academically driven program in Jeddah. Research isn't an add-on here — it's the culture. Consultants publish with their residents, organize research days for trainees, and have connections that open fellowship doors that don't open anywhere else.</p></div>
+          <div class="chunk"><span class="chunk-tag">KAU / KAUH · What I experienced</span><p>I'll be honest — my direct elective experience here was limited. I attended clinics and observed, but I was on the outside looking in. What I did gain was a clear picture of what this program produces — residents who communicate well, escalate appropriately, and operate in an environment where the standard is genuinely high.</p>
+          <div class="swap"><span class="ctr">Swap per room</span> — KAUH: "I also attended clinic with Dr. Ramma." · KAU: "I heard directly from residents about the training culture."</div></div>
+          <div class="chunk"><span class="chunk-tag">KAU / KAUH · What I want to gain</span><p>I have two ongoing systematic reviews — cochlear nerve diameter in hearing loss, and antibiotic prophylaxis in head and neck surgery.</p>
+          <div class="swap"><span class="ctr">Swap per room</span> — KAUH: "Dr. Zawawi's cochlear implant work connects to the first." · KAU: "Dr. Merdad's H&N oncology work connects to my research direction."</div>
+          <p style="margin-top:8px">I'm not walking in with the longest elective history. I'm walking in with research already started, a training background different from every other candidate, and a genuine understanding of what this program demands. I want to train where the standard is this high — because that's the only way I'll find my actual ceiling.</p></div>
+
+          <div class="chunk"><span class="chunk-tag">Fakeeh · What I know</span><p>Fakeeh is a program with a clear identity — Dr. Amoodi leads it as both RTP and chairman, so the training direction comes from the top with full conviction. It's not a program filling service gaps. It's built around the resident's development.</p></div>
+          <div class="chunk"><span class="chunk-tag">Fakeeh · What I experienced</span><p>I didn't complete a full elective here — so I went to the residents directly. Dr. Hasan, an R2 currently in the program, was consistent in one thing — if you work hard here, you're rewarded for it. The RTP genuinely invests in your future, not just your service hours.</p></div>
+          <div class="chunk"><span class="chunk-tag">Fakeeh · What I want to gain</span><p>I want a program where my training is the priority — where a rotation is given because it builds me, not because there's a gap to fill. Dr. Amoodi's otology background connects directly to my ongoing systematic review on cochlear nerve diameter in hearing loss. I want to walk into that environment and build on both.</p></div>
+
+          <div class="chunk"><span class="chunk-tag">KFAFH · What I know</span><p>KFAFH has a defined structure — Dr. Alsolami in otology, Dr. Suzan in laryngology, Dr. Al-Bar as chairman. What I've heard consistently is that the foundation is solid and the seniors have no regrets.</p></div>
+          <div class="chunk"><span class="chunk-tag">KFAFH · What I experienced</span><p>I spoke directly with Dr. Duha, Dr. Ahmed Mogharbel, and Dr. Rahaf Rajab — seniors who've been through the full program. What struck me wasn't that they praised it — it's that they were proud of it. There's a difference. They talked about building connections, laying foundations, being safe surgeons. No regrets. That's people who've lived it.</p></div>
+          <div class="chunk"><span class="chunk-tag">KFAFH · What I want to gain</span><p>A program where I can lay my foundation properly, build surgical confidence, and be known as someone who contributed — not disappeared. I also met Dr. Suzan at the cadaveric facioplasty course — a real interaction in a real working environment. I want to continue that under her in laryngology.</p></div>
+        </div>
+        <div class="note">MOH interview = all RTPs in one room (KAMC, KFGH, EJH). Answer "Why MOH" as a system — never favor one hospital. Name Jad/Bukhari as people in the ecosystem, not as reasons one center beats another.</div>
+      </div></div></div>
+    </article>
+
+    <!-- Q4 -->
+    <article class="q" id="q4">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">04</span>
+        <div class="q-text">
+          <h3>What do you know about our program?</h3>
+          <div class="q-flow">Lead with knowledge, not experience · compressed "Why our center" · Pyramid</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors — one line per center</div>
+          <ul>
+            <li><b>NGHA:</b> residents-based, no outside rotations, trust compounds, self-reliant surgeons</li>
+            <li><b>MOH:</b> oldest + largest, multi-hospital, dedicated subspec consultants, deliberate volume</li>
+            <li><b>KAU/KAUH:</b> academic engine, research = currency, research days, fellowship pipeline</li>
+            <li><b>Fakeeh:</b> Amoodi RTP+chairman, deliberate training, growth over service</li>
+            <li><b>KFAFH:</b> defined subspec leadership, solid foundation, minimal regrets</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version — by center</div>
+          <div class="chunk"><span class="chunk-tag">NGHA</span><p>Residents-based program. No outside rotations — trust is earned internally and compounds. The surgical confidence your residents come out with is a product of that structure specifically. I witnessed it firsthand during my elective — the culture, the teamwork, the standards.</p></div>
+          <div class="chunk"><span class="chunk-tag">MOH</span><p>The oldest and most established program in the region. The only one that gives you subspecialty depth across multiple hospitals within a single training structure. Each subspecialty has its own dedicated consultant. The volume is unmatched — and it's deliberate, not incidental.</p></div>
+          <div class="chunk"><span class="chunk-tag">KAU / KAUH</span><p>The most academically driven program in Jeddah. Research is the currency here — consultants publish with residents, annual research days, conference involvement, fellowship connections that don't exist anywhere else. The standard is high and it's meant to be.</p></div>
+          <div class="chunk"><span class="chunk-tag">Fakeeh</span><p>A program with a clear identity led by Dr. Amoodi as both RTP and chairman. Training is deliberate — residents aren't sent somewhere to fill a service gap, they're sent somewhere to grow. That philosophy comes from the top.</p></div>
+          <div class="chunk"><span class="chunk-tag">KFAFH</span><p>A program with defined subspecialty leadership — Dr. Alsolami in otology, Dr. Suzan in laryngology, Dr. Al-Bar as chairman. What I've heard consistently from seniors who've been through it is that the foundation is solid and the regrets are minimal.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q5 -->
+    <article class="q" id="q5">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">05</span>
+        <div class="q-text">
+          <h3>Why should we rank you #1?</h3>
+          <div class="q-flow">What program values → What I bring that satisfies it → The fit · Pyramid (NOT a CV flex)</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors — per center</div>
+          <ul>
+            <li><b>Core rule:</b> match what THEY need, not list what I have. Fit &gt; credentials.</li>
+            <li><b>NGHA:</b> values self-reliance → scissors (no one told me to fix it) + Trinity independence → "works hard when nobody's watching"</li>
+            <li><b>MOH:</b> values breadth → adapted across otology/H&N/facioplasty + research links subspecs → already in 2 hospitals</li>
+            <li><b>KAU/KAUH:</b> values research → 2 first-author + 2 ongoing ENT + 44% error catch → contributes unprompted</li>
+            <li><b>Fakeeh:</b> values hard work + investment → went to Dr. Hasan before applying + 6 yrs no safety net</li>
+            <li><b>KFAFH:</b> values foundation → Trinity = same philosophy, continuing in ENT + Suzan interaction</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version — by center</div>
+          <div class="chunk"><span class="chunk-tag">NGHA</span><p>NGHA produces self-reliant, surgically confident residents — because the program demands initiative and rewards it. That's how I already operate. After cutting Dr. Ali's knot at the end of a long parotid surgery, nobody told me to go home and practice. I bought a suture kit that night and came back better. That's not a story I'm proud of because it went well — it's how I respond when things go badly. NGHA doesn't need someone who works hard when supervised. It needs someone who works hard when nobody's watching. I've shown you I do that — in your own hospital.</p></div>
+          <div class="chunk"><span class="chunk-tag">MOH</span><p>MOH is built on breadth and volume. During my electives at KAMC and KFGH I rotated between otology, head and neck, and facioplasty — different consultants, different demands. I didn't need time to adjust; I learned what each team needed and became useful fast. I also bring research already connected to your subspecialty strengths — cochlear nerve diameter in hearing loss, antibiotic prophylaxis in head and neck surgery. I give MOH someone already in two of your hospitals, already connected to your consultants, already doing the academic work you value.</p></div>
+          <div class="chunk"><span class="chunk-tag">KAU / KAUH</span><p>This program runs on academic output. I have two first-author publications and two ongoing ENT systematic reviews. I didn't start them because residency required it — I started them because the questions interested me, and because I caught a 44% inclusion error in my own work mid-project and restarted rather than let it through. You need residents who contribute academically without being told to. I've been doing that before residency started — I want to continue it here.</p></div>
+          <div class="chunk"><span class="chunk-tag">Fakeeh</span><p>Fakeeh rewards hard work with genuine investment in training. I went to Dr. Hasan before applying — not the website, the resident living the program. What I heard was consistent: if you push yourself here, it shows. I come from six years abroad with no safety net and no familiar system — that's not a hardship I'm recovering from, it's a baseline I build from. A program that invests in hard work needs someone who brings it without being asked.</p></div>
+          <div class="chunk"><span class="chunk-tag">KFAFH</span><p>KFAFH produces safe surgeons who know their limits and have no regrets — Dr. Duha, Dr. Mogharbel, Dr. Rajab all said the same independently. Trinity taught me to handle any general case that walked through the door — not as an expert, but as someone who knew their limits and what to do. That's the same foundation KFAFH builds in ENT. I'm not starting from a different philosophy — I'm continuing the same one in a new specialty.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q6 -->
+    <article class="q" id="q6">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">06</span>
+        <div class="q-text">
+          <h3>How do you compare with other candidates?</h3>
+          <div class="q-flow">Acknowledge → Program values → One proof → Return to panel · Professional (humility)</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li><b>Never win a CV war.</b> Don't compare to people you haven't met.</li>
+            <li>Flip to: "what your program values is ___, here's how I embody it, merit is yours to judge."</li>
+            <li>NGHA = initiative · MOH = adaptability · KAU = research · Fakeeh = self-investment · KFAFH = foundation</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version — by center</div>
+          <div class="chunk"><span class="chunk-tag">NGHA</span><p>Comparing myself to candidates I haven't met wouldn't be honest or fair to them. What I can speak to is what I understand NGHA values — a resident who takes initiative, earns trust independently, and doesn't wait to be told. I've already shown that inside this program. Whether that's enough is yours to make.</p></div>
+          <div class="chunk"><span class="chunk-tag">MOH</span><p>It's genuinely difficult to compare myself to 80 candidates, and I wouldn't want to. What I know is that MOH values adaptability, efficiency under volume, and breadth across subspecialties. I've rotated across two of your hospitals, worked under different consultants, and adapted quickly each time. Whether that meets your standard is your call.</p></div>
+          <div class="chunk"><span class="chunk-tag">KAU / KAUH</span><p>I can't speak for the other candidates. What I can speak to is what this program values — academic contribution and high standards. I have two ongoing ENT systematic reviews and two first-author publications. I didn't start them for this interview. Whether that contribution is what you're looking for is for you to decide.</p></div>
+          <div class="chunk"><span class="chunk-tag">Fakeeh</span><p>Comparing myself to others wouldn't be fair to them or to you. What I understand Fakeeh values is a resident who invests in their own growth without being pushed. I went to your residents before applying — to Dr. Hasan directly — because that's how I make decisions. Whether that reflects what you're looking for is yours to judge.</p></div>
+          <div class="chunk"><span class="chunk-tag">KFAFH</span><p>I wouldn't compare myself to candidates I haven't met. What I know is that KFAFH values building a proper foundation — safe, no shortcuts, no regrets. I come from a system that trained me exactly that way in general medicine. I want the same in ENT. Whether that's the resident you're looking for is your decision.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q7 -->
+    <article class="q" id="q7">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">07</span>
+        <div class="q-text">
+          <h3>Where do you see yourself in 5 / 10 years?</h3>
+          <div class="q-flow">Near → Mid → Outside medicine → Why here gets me there · Rule of Three</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>5yr: <b>confident independent surgeon</b>, team trusts me, fellowship is a plan not a reach, subspec open <b>by choice not indecision</b></li>
+            <li>Outside: <b>family — not separate from career, both responsibilities, won't come short</b></li>
+            <li>10yr: fellowship abroad, name known in community, academic vs clinical decided <b>from the OR not the textbook</b></li>
+            <li>Close: give back to the program — research / teaching / mentorship</li>
+            <li>Why here: center-specific tag (foundation travels / breadth / academic pipeline)</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><span class="chunk-tag">Near (5 yr)</span><p>In five years I want to be a confident, independent surgeon — someone the team trusts in the OR and outside it. I want my foundation in ENT solid enough that fellowship applications aren't a reach, they're a plan. I'm deliberately keeping my subspecialty direction open — not because I'm undecided, but because I haven't operated enough to make that call honestly. I'd rather decide from experience than commit prematurely.</p></div>
+          <div class="chunk"><span class="chunk-tag">Outside medicine</span><p>Outside medicine — I want to have started a family. That's not separate from my career goals, it's part of them. Both are responsibilities, and I don't intend to come short in either.</p></div>
+          <div class="chunk"><span class="chunk-tag">Mid (10 yr)</span><p>Fellowship completed — ideally abroad, somewhere that pushes me further than I can push myself here. Name known within the community, not just the hospital. By then I'll know whether my pull is toward academic medicine or pure surgical practice — and I'll have made that choice deliberately, the same way I chose this specialty. Either way, I want to give back to the program that trained me — research, teaching, mentorship. That cycle matters to me.</p></div>
+          <div class="chunk"><span class="chunk-tag">Why here gets me there · swap</span>
+          <div class="swap"><span class="ctr">Per center</span>
+            NGHA: "The foundation NGHA builds travels — into fellowship, into practice." ·
+            MOH: "The breadth MOH gives means I've seen everything by the time I'm fellowship-ready." ·
+            KAUH/KAU: "The academic culture here is the pipeline from residency to fellowship." ·
+            Fakeeh/KFAFH: "A program where I'm known and trusted writes the recommendation that opens the right doors."
+          </div></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q8 -->
+    <article class="q" id="q8">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">08</span>
+        <div class="q-text">
+          <h3>What fellowship are you planning?</h3>
+          <div class="q-flow">Honest framing → Field awareness → Current priority · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>None planned — <b>committing now is premature, same mistake I avoided choosing specialty</b></li>
+            <li>Show awareness: otology/neurotology · rhinology/skull base · H&N onc · facial plastics · laryngology</li>
+            <li>Priority: <b>get foundation right across all. Decide from the OR, not the textbook.</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I don't have a fellowship planned — and committing to one now would be premature. I haven't operated enough to know where my pull genuinely lies. Choosing a fellowship before I've lived the subspecialties would be the same mistake I avoided when choosing a specialty — deciding from the outside rather than from experience.</p></div>
+          <div class="chunk"><p>That said, I've looked into what's out there. Otology and neurotology — temporal bone, cochlear implants, skull base. Rhinology — endoscopic skull base, advanced sinus surgery. Head and neck surgical oncology — resection, reconstruction, multidisciplinary management. Facial plastic and reconstructive surgery. Laryngology — voice, airway, swallowing. Each one has a depth you can spend a career in.</p></div>
+          <div class="chunk"><p>Right now my goal is to get the surgical foundation right across all of them — competent, safe, honest about where I am in each. The fellowship decision will come from that. I'd rather make that call from the OR than from a textbook.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q9 -->
+    <article class="q" id="q9">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">09</span>
+        <div class="q-text">
+          <h3>Which subspecialty interests you most?</h3>
+          <div class="q-flow">Honest openness → Current intellectual pull → Why it's still early · Pyramid</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>All genuinely interesting: <b>microscope (oto) · endoscope (rhino) · gross (H&N) · fine craft (facio)</b></li>
+            <li>Honest current pull: <b>otology + H&N — by evidence not design</b> (cochlear review pulled me into oto; H&N tumor board at NGHA sat with me)</li>
+            <li>Still early: <b>haven't operated → let the OR decide</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>Every subspecialty in ENT has something that genuinely interests me — and I mean that without it being diplomatic. The microscope work in otology, the precision of endoscopic rhinology, the oncologic complexity of head and neck, the fine craftsmanship of facioplasty. Four completely different skill sets inside one specialty. That's part of why I chose it.</p></div>
+          <div class="chunk"><p>If I'm honest about where my intellectual investment currently sits — it's split between otology and head and neck. Not by design, but by evidence. My ongoing systematic review on cochlear nerve diameter pulled me deeper into otology than I expected. And the head and neck work at NGHA — the tumor board prep, the oncologic complexity, the multidisciplinary nature — sat with me too.</p></div>
+          <div class="chunk"><p>But I haven't operated in either seriously yet. I made a rule for myself — I don't commit to something I haven't lived from the inside. R2 will tell me more than I know now. I want to let the operating room make that decision, not my reading.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q10 -->
+    <article class="q" id="q10">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">10</span>
+        <div class="q-text">
+          <h3>What if we didn't accept you this year?</h3>
+          <div class="q-flow">Accept → Build → Return · Problem-Solution Arc · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Accept: respect the bar — <b>rejection is information, not a verdict</b></li>
+            <li>Plan: understand why → fix the gap (clinical / research / presentation) → <b>stay connected, don't disappear</b></li>
+            <li>Return: <b>one rejection doesn't undo the elimination process</b> — come back stronger</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I'd respect the decision. A program of this standard has every right to set a high bar — and if I didn't clear it this year, that's information I need to take seriously, not a verdict to argue with.</p></div>
+          <div class="chunk"><p>The first thing I'd do is understand why — not to dispute it, to fix it. If it's clinical exposure, another elective or attachment. If it's research output, complete and publish what's ongoing. If it's how I presented today, I'd work on that too. And I'd stay connected — courses, symposiums, the community I've started building. I wouldn't disappear.</p></div>
+          <div class="chunk"><p>I chose ENT after eliminating every serious alternative. One rejection doesn't undo that. I'd come back the following year with a stronger application and a clearer understanding of what this program needs from me specifically.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q11 -->
+    <article class="q" id="q11">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">11</span>
+        <div class="q-text">
+          <h3>Will you change specialty if not matched?</h3>
+          <div class="q-flow">No → Why → Gap year becomes fuel · Professional + Scholar</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li><b>No.</b> ENT is where I arrived after eliminating everything else.</li>
+            <li>Gap year = <b>more research, another elective, clearer application</b></li>
+            <li>Come back stronger, not different</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>No. ENT is where I arrived after eliminating every serious alternative. One rejection doesn't undo that process — it tells me what I need to strengthen. A gap year isn't wasted time. It's another year of research output, another elective, a clearer application. I'd come back the following year a stronger candidate than I am today.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q12 -->
+    <article class="q" id="q12">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">12</span>
+        <div class="q-text">
+          <h3>Would you accept unpaid?</h3>
+          <div class="q-flow">Commitment → Honest nuance → The line · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Commitment to specialty <b>isn't conditional on pay</b></li>
+            <li>Want to understand timeline/terms — <b>to plan responsibly, not to negotiate</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>ENT is the deliberate choice — that won't change based on compensation. If the program required an unpaid period as part of the structure, I'd find a way to make it work. What I'd want to understand is the timeline and the terms — not to negotiate, but to plan responsibly. The commitment to the specialty isn't conditional. The practicalities are worth an honest conversation.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q13 -->
+    <article class="q" id="q13">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">13</span>
+        <div class="q-text">
+          <h3>If I gave you the contract now, would you sign?</h3>
+          <div class="q-flow">Yes → Read it → Yes · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li><b>Yes</b> — didn't apply without being serious</li>
+            <li>Would read it (responsible) — <b>but the answer is yes</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>If this is the program I'm sitting in front of — yes. I didn't apply here without being serious about it. I'd want to read what I'm signing, as any responsible person would. But the answer is yes.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q14 -->
+    <article class="q" id="q14">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">14</span>
+        <div class="q-text">
+          <h3>Do you have any questions for us?</h3>
+          <div class="q-flow">Long-term intent → ask for their roadmap · Professional (coachability)</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Frame: I see a <b>long-term relationship</b>, fellowship abroad via your connections</li>
+            <li>Ask: <b>"how should a resident position toward that from day one?"</b></li>
+            <li><b>Soften for Fakeeh/KFAFH</b> — don't presume an existing pipeline</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><span class="chunk-tag">KAUH / KAU / NGHA</span><p>My goal isn't just to complete this program and move on. This is a center I genuinely respect and I see myself building a long-term relationship with it — including pursuing a fellowship abroad through the connections you've established internationally. How would you advise a resident to position themselves toward that from day one?</p></div>
+          <div class="chunk"><span class="chunk-tag">Fakeeh / KFAFH · softened</span><p>How would you advise a resident in this program to build toward a fellowship abroad — what does that path look like from where you're sitting?</p></div>
+        </div>
+      </div></div></div>
+    </article>
+  </section>
+
+  <!-- ============ BEHAVIORAL ============ -->
+  <section class="cat">
+    <div class="cat-head">
+      <span class="dot" style="background:var(--steel)"></span>
+      <h2>Behavioral &amp; Soft Skills</h2>
+      <span class="count">15–26</span>
+    </div>
+
+    <!-- Q15 -->
+    <article class="q" id="q15">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">15</span>
+        <div class="q-text">
+          <h3>What are your strengths?</h3>
+          <div class="q-flow">Trait → Story → Trait (evidence sandwich) · Rule of Three</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>1. <b>Prioritization / systems thinking</b> → general vs H&N team, STAT vs can-wait, adapted in days</li>
+            <li>2. <b>Adaptability</b> → Dublin at 18, student rep in 2 months, mediator</li>
+            <li>3. <b>Relentless when invested</b> → scissors → suture kit at midnight, no one asked</li>
+            <li>Never claim — prove. Cut "competitive / pushy."</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I think in systems — and I work best when things need to be triaged. Rotating between the general team and the H&N team taught me that. One was clinic-heavy, high flow, fast decisions. The other was inpatients, tumor board prep, longer stays, consulting other specialties. Completely different pace and responsibilities. I adapted to both within days, not weeks. That's not something I had to work at — it's how I operate.</p></div>
+          <div class="chunk"><p>Second is adaptability beyond clinical work. I moved to Dublin at 18 knowing nobody. Two months later I was student representative, tutoring colleagues, mediating between students and faculty. I recognized quickly that you're only as strong as the people around you — and I'd rather be someone people can rely on than someone who figures it out alone.</p></div>
+          <div class="chunk"><p>Third — I genuinely believe human potential has no ceiling, and I act on that when I'm invested. When I failed to cut a suture properly in front of Dr. Ali after a long parotid surgery, I went home that night, bought a suture kit, and practiced until I got it right. Not because someone told me to. Because I couldn't leave it there.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q16 -->
+    <article class="q" id="q16">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">16</span>
+        <div class="q-text">
+          <h3>What is your weakness?</h3>
+          <div class="q-flow">Honest naming → Story where it cost → What changed · Problem-Solution Arc</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Name: <b>I need reason behind everything</b> — rationalize, struggle with chaos</li>
+            <li>Cost: early bad OR experiences → rationalized "surgery isn't for me" → almost talked myself out</li>
+            <li>Change: <b>refused to let a few experiences = conclusion</b> → went back, found anatomy's precision in the OR</li>
+            <li>Still there: <b>sometimes the rational move is to act before you fully understand</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I need reason behind everything — and that's not always a strength. During my early clinical years I had a string of discouraging OR experiences. Poor dynamics, bad timing, moments where I felt like I didn't belong. My instinct was to rationalize it — find the logical explanation for why the environment was the problem, why the data pointed away from surgery for me. I almost talked myself out of the OR entirely.</p></div>
+          <div class="chunk"><p>What snapped me out of it wasn't logic. It was refusing to let a few bad experiences define a conclusion. I went back. I pushed through the etiquette, the team dynamics, the hierarchy. And I found what I'd loved in anatomy labs — the precision, the variations, the spatial reasoning — alive in the operating room.</p></div>
+          <div class="chunk"><p>The weakness is still there. I still reach for reason when chaos hits. But I've learned that sometimes the most rational thing you can do is act before you fully understand — and trust that the understanding comes after.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q17 -->
+    <article class="q" id="q17">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">17</span>
+        <div class="q-text">
+          <h3>Conflict with a senior — how did you solve it?</h3>
+          <div class="q-flow">Situation → Action → Resolution → Clinical framing · STAR+ · Communicator</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Situation: student rep, lecturer's style distressing students abroad</li>
+            <li>Action: <b>didn't escalate first</b> — went to lecturer privately, specific examples, gave info not accusation</li>
+            <li>Resolution: approach changed; trust improved person-to-person</li>
+            <li>Clinical: <b>conflict is patient-related not personal</b> → colleague first → chief resident as neutral ground → chain of command. <b>Patient can't wait.</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>During my time as student representative in Trinity, I found myself between a group of students and a faculty member whose teaching style was creating genuine distress. The students were struggling — not academically, but personally. Life abroad, the pressure of medicine, a lecturer who wasn't reading the room. The complaints came to me.</p></div>
+          <div class="chunk"><p>I didn't escalate immediately. I went to the lecturer directly first — privately, respectfully, with specific examples rather than general complaints. I wasn't there to accuse, I was there to give information they didn't have. The conversation was uncomfortable. But it was necessary.</p></div>
+          <div class="chunk"><p>The approach changed — not overnight, but enough that the students noticed. And the lecturer appreciated being told directly rather than through a formal complaint.</p></div>
+          <div class="chunk"><p>That principle carries into clinical work. In a high-pressure environment conflict will happen — but in medicine it's never personal, it's patient-related. So the approach is the same: bring it up directly to the colleague first, privately and respectfully — we're on the same team and want the same outcome. If that doesn't resolve it and patient care is affected, I'd take it to the chief resident as neutral ground. If it escalates beyond that, I'd follow the chain of command — not to create problems, but because the patient can't wait for us to sort ourselves out.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q18 -->
+    <article class="q" id="q18">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">18</span>
+        <div class="q-text">
+          <h3>Tell me about a time under pressure</h3>
+          <div class="q-flow">S → T → A → R → What changed · STAR+ · Manager + Collaborator</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>S: SimWars, national, team leader, representing TCD</li>
+            <li>T: <b>make 5 others perform, not just me</b> — they were panicking</li>
+            <li>A: nervous but didn't show it; talked to each; <b>one-minute rule on mistakes then move</b></li>
+            <li>R: B-team → A-team leader; <b>not most skilled — team functioned</b></li>
+            <li>Changed: leadership under pressure = <b>make it safe for others to keep going</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I represented Trinity in a national simulation competition — emergency and critical care scenarios against teams from across the country. I was team leader.</p></div>
+          <div class="chunk"><p>The night before, the team was nervous. The morning of, worse. My job wasn't just to perform — it was to make sure five other people could perform. That's a different kind of pressure.</p></div>
+          <div class="chunk"><p>I was nervous too. I didn't pretend otherwise — but I didn't show it. I moved around the team, talked to each person, kept it normal. Before we went in: we've prepared, we know what we're doing, let's just do it. During the scenarios, mistakes happened. My rule was simple — one minute to acknowledge it, then it's done. We have another emergency coming and can't carry the last one into it. That minute meant nobody suppressed anything — but the hard stop meant nobody drowned in it either.</p></div>
+          <div class="chunk"><p>We fought from the B-team to leading the A-team. Not because I was the most technically skilled — because the team functioned, under pressure, after mistakes, across multiple scenarios. What I learned is that leadership under pressure isn't being the calmest person in the room. It's being the person who makes it safe for others to keep going. That one-minute rule is something I still use.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q19 -->
+    <article class="q" id="q19">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">19</span>
+        <div class="q-text">
+          <h3>Tell us about your leadership skills</h3>
+          <div class="q-flow">Define → Prove (2 modes) → Apply · Pyramid + Rule of Three</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Define: <b>make the people around you function better</b> — not loudest/most senior</li>
+            <li>Prove A — SimWars: hold team together, one-minute rule, B→A</li>
+            <li>Prove B — NGHA: <b>most junior, lead by initiative</b>, earn trust → earn the right to lead</li>
+            <li>Apply: want both modes in residency</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>Leadership to me isn't being the loudest or most senior person in the room. It's making the people around you function better than they would without you. Sometimes that's a decision, sometimes a conversation, sometimes just absorbing the pressure so others don't have to.</p></div>
+          <div class="chunk"><p>In SimWars I learned that early. I was nervous before every scenario — but my job was to stop that nervousness spreading. I kept things normal, gave the team a one-minute window to process mistakes, then closed it. We moved from the B-team to leading the A-team — not because I was the most skilled, but because the team functioned.</p></div>
+          <div class="chunk"><p>At NGHA I learned the other side. I was the most junior person on the H&N team. Leadership there wasn't directing — it was taking initiative without being asked. Preparing tumor board materials, knowing a patient's story well enough to discuss it with a pathologist, being useful before anyone pointed at a task. That's how you earn trust in a hierarchy — and trust is how you eventually earn the right to lead.</p></div>
+          <div class="chunk"><p>I want to carry both into residency — the SimWars version that holds a team together under pressure, and the NGHA version that earns the right to lead by being the most prepared person in the room first.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q20 -->
+    <article class="q" id="q20">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">20</span>
+        <div class="q-text">
+          <h3>What is the quality of a good leader?</h3>
+          <div class="q-flow">Knows their limits → escalates without ego → teaches after · Rule of Three</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Best leadership I saw: <b>NGHA airway emergency</b></li>
+            <li>R1 → recognized limit, escalated · R3/R4/R5 came unasked · consultant called without hesitation</li>
+            <li>R5 debriefed them after — <b>teach when it's calm, not during the crisis</b></li>
+            <li>Quality = <b>knowing your limit + no ego in asking for help + building the team after</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>The best leadership I've seen wasn't one person directing — it was a team where everyone knew their limit. During an airway emergency at NGHA — a nasopharyngeal mass, desaturating patient, multiple failed intubations — the first on-call assessed it and escalated immediately. The senior residents came in without being asked, even though they weren't on call. Each person recognized when something was beyond them and called up the chain without hesitation or ego. The consultant was called when it warranted it — no one treated that as a failure.</p></div>
+          <div class="chunk"><p>What made it leadership rather than just teamwork was what happened after. The most senior resident sat everyone down and walked them through it — why escalating was the right call, what each person did well, what to do next time. He taught when it was calm, not during the crisis.</p></div>
+          <div class="chunk"><p>So to me a good leader has three things: they know their own limits, they ask for help without ego, and they build the people under them afterward — not by criticizing in the moment, but by teaching once the pressure's off.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q21 -->
+    <article class="q" id="q21">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">21</span>
+        <div class="q-text">
+          <h3>What if you made a medical mistake?</h3>
+          <div class="q-flow">Acknowledge → Act (safety + escalate + document) → Reflect · SPIES · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Acknowledge: <b>honest immediately</b> — hidden mistake repeats</li>
+            <li>Act: <b>patient safety first</b> → escalate to senior/team → document if warranted, no exceptions</li>
+            <li>Reflect: understand not punish; <b>scissors instinct — fix rather than avoid</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>The first thing is to be honest about it — with myself, the team, and the patient. A mistake that's hidden is a mistake that happens again. The moment I recognize something went wrong, I say it — not after I've figured out how to explain it, immediately.</p></div>
+          <div class="chunk"><p>Then patient safety comes first. Whatever corrects the situation or minimizes harm happens before anything else. Then I escalate appropriately — my senior needs to know, the team needs to know, and if it warrants documentation it gets documented. No exceptions.</p></div>
+          <div class="chunk"><p>After the patient is safe, I sit with it — not to punish myself, but to understand it. What happened, why, and what I change going forward. The scissors incident taught me that. I failed a basic task, went home frustrated, came back with a suture kit and better technique. That instinct — to fix rather than avoid — is how I respond to mistakes.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q22 -->
+    <article class="q" id="q22">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">22</span>
+        <div class="q-text">
+          <h3>What did you learn from being an intern?</h3>
+          <div class="q-flow">Moment → Lesson → How it carries forward · STAR+ · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Knowing medicine ≠ practicing it</li>
+            <li>Overwhelming on-call, no senior immediately → had to triage STAT vs wait</li>
+            <li>Lesson: <b>prioritization under pressure is its own discipline — only learned by being in it</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>Internship taught me that knowing medicine and practicing it are two different things. The moment that sat with me most was an on-call where I was genuinely overwhelmed — multiple patients, competing priorities, no senior immediately available. I had to decide what was STAT and what could wait. I got some right and some wrong. What I learned wasn't a clinical skill — it was that prioritization under pressure is its own discipline, and you only develop it by being in the situation. No textbook prepares you for the moment everything lands at once. Internship was that moment, repeatedly, until it became manageable.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q23 -->
+    <article class="q" id="q23">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">23</span>
+        <div class="q-text">
+          <h3>Difficult patient you met?</h3>
+          <div class="q-flow">Situation → What made it hard → How handled → What it taught · STAR+ · Communicator + Health Advocate</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Nephrology: elderly woman, GFR 5, AKI on CKD, prior strokes, non-mobile, cardiac hx</li>
+            <li>Dialysis = only option. <b>Refused — fear of needles + didn't want it</b></li>
+            <li>Tried everything — multiple consultants/residents. She chose to refuse.</li>
+            <li>Lesson: <b>care isn't always best outcome — sometimes it's the patient feeling heard enough to choose.</b> She wasn't difficult; the situation was.</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>During my nephrology rotation I met an elderly woman — previous strokes, non-mobile, cardiac history, AKI on top of CKD, GFR of 5. Dialysis was her only viable option. She refused it. Not out of confusion — out of fear of needles and a genuine belief that she didn't want that kind of intervention. We tried everything. Multiple consultants, multiple conversations, residents sitting with her. She listened to all of it and still said no.</p></div>
+          <div class="chunk"><p>What made it difficult wasn't the clinical complexity — it was that she was making a fully informed, autonomous decision we knew would cost her her life. And we had to respect it. I sat with that for a long time afterward. What it taught me is that patient care isn't always about the best clinical outcome — sometimes it's about making sure the patient feels heard enough to make their own choice. She wasn't difficult. The situation was.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q24 -->
+    <article class="q" id="q24">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">24</span>
+        <div class="q-text">
+          <h3>What makes you angry about patients?</h3>
+          <div class="q-flow">Reframe (not anger) → Honest feeling → Understanding → Use it · Professional + Communicator</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Reframe: <b>"angry" isn't the word</b> — it unsettles me</li>
+            <li>What: refusing proper care out of fear/paranoia, seeing the outcome coming</li>
+            <li>I get it — I'm an anxious patient myself</li>
+            <li>Use it: <b>frustration = signal I haven't communicated well enough → slow down, find another way in</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>Angry isn't quite the right word — but there's something that genuinely unsettles me. When a patient refuses proper care out of fear or paranoia, and you can see the outcome coming and can't stop it. I understand it — I'm a patient myself sometimes, and I know what anxiety does to your ability to trust a recommendation. But understanding it doesn't make it easier to watch.</p></div>
+          <div class="chunk"><p>What I've learned is that the frustration is useful information. It tells me I haven't communicated well enough yet — that there's still a gap between what I'm saying and what the patient is hearing. So I use it as a signal to slow down and find a different way in, rather than pushing harder on the same door.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q25 -->
+    <article class="q" id="q25">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">25</span>
+        <div class="q-text">
+          <h3>How do you deal with stress and burnout?</h3>
+          <div class="q-flow">Self-awareness → 3 coping strategies → Why it works · Rule of Three · Manager + Health Advocate</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Signals: <b>over-rationalizing + withdrawing</b> = my early-warning</li>
+            <li>1. Community — people in the same position (coming back to Saudi, unknown, competitive)</li>
+            <li>2. Read — philosophy/history, reframe</li>
+            <li>3. Sport — padel, only the thing in front of me</li>
+            <li>Line: <b>if coping eats patient care/academics, it's avoidance not coping</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>Stress in residency isn't something you eliminate — it's something you manage, and the first step is recognizing it early. For me that recognition comes when I start rationalizing everything excessively or withdrawing from people. Those are my signals.</p></div>
+          <div class="chunk"><p>When I notice them, I do three things. First — I find people in the same position. Not to complain, to normalize. Coming back to Saudi after six years abroad, entering one of the most competitive specialties as someone nobody here knows — that's isolating if you let it be. Second — I read. Not always medicine. Philosophy, history, something that reframes the situation. Third — I push whatever sport I'm pursuing harder. Padel right now. It's the one place where the only thing that matters is what's in front of me.</p></div>
+          <div class="chunk"><p>None of those compromise patient care or academic output — that's the line. If my coping starts eating into either, it's no longer coping, it's avoidance. The goal is to reset enough to come back fully present. That's what the patients and the program deserve.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q26 -->
+    <article class="q" id="q26">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">26</span>
+        <div class="q-text">
+          <h3>Tell us about an interesting case</h3>
+          <div class="q-flow">Setup → The moment → What it meant · Narrative Transportation · the decannulation</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>13yo, major RTA, trached months, family told recovery uncertain → <b>decannulation day</b></li>
+            <li>The moment: <b>Nervani, the trache nurse — does this daily, still in tears</b></li>
+            <li>Boy phonated first time in months; whole room couldn't hold it</li>
+            <li>Meaning: <b>other end of the unknown-prognosis spectrum — basic necessities you get to give back</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>During my elective I attended a tracheostomy clinic. A 13 year old who'd suffered a major RTA — the family had been told early that recovery would be long and uncertain. He'd been trached for months. That day was his decannulation.</p></div>
+          <div class="chunk"><p>What I remember most isn't the procedure. It's Nervani — the tracheostomy nurse who runs that clinic daily. She's done this hundreds of times. And she was in tears. The family was in tears. The boy phonated for the first time in months. Something so basic — breathing without a tube, making a sound — and the room couldn't hold it together. The fact that Nervani cried, someone for whom this is a Tuesday, told me everything about what this specialty can give back.</p></div>
+          <div class="chunk"><p>I've seen cases where you do everything right and the outcome is still unknown. This was the other end of that. A 13 year old went home breathing on his own. His family got their son back. These are purely basic necessities — and in ENT, you get to give them back. That's not something every specialty can say.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+  </section>
+
+  <!-- ============ PERSONAL ============ -->
+  <section class="cat">
+    <div class="cat-head">
+      <span class="dot" style="background:var(--amber)"></span>
+      <h2>Personal</h2>
+      <span class="count">27–31</span>
+    </div>
+
+    <!-- Q27 -->
+    <article class="q" id="q27">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">27</span>
+        <div class="q-text">
+          <h3>Who is your role model?</h3>
+          <div class="q-flow">Reframe → Philosophy → Proof · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>No single role model — <b>one person = inherit their blind spots too</b></li>
+            <li>Instead: take the best from everyone worked with</li>
+            <li>Proof: <b>4 centers deliberately</b> — Bukhari (technique is yours), Ali (uncompromising standards), Jad (teach while operating)</li>
+            <li>"I'm still collecting."</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I don't have one role model — and I think that's deliberate. Anchoring yourself to one person means you inherit their blind spots alongside their strengths.</p></div>
+          <div class="chunk"><p>What I've tried to do instead is take the best from everyone I've worked with. Every consultant has something worth studying — how they lead a team, handle a difficult patient, make a decision under pressure, hold an instrument. None are identical; all have something the others don't.</p></div>
+          <div class="chunk"><p>That's part of why I did electives across four different ENT centers deliberately — to see different techniques, team cultures, ways of running an OR. Dr. Bukhari described the field one way — the principles are known, the technique is yours to develop. Dr. Ali showed me what surgical standards look like held without compromise. Dr. Jad showed me what it means to teach while operating. I'm still collecting.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q28 -->
+    <article class="q" id="q28">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">28</span>
+        <div class="q-text">
+          <h3>Last non-medical book you read?</h3>
+          <div class="q-flow">Name → Argument → Why it's relatable · keep it genuine</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Seneca, <i>On the Shortness of Life</i></li>
+            <li>Argument: most waste their life by never fully committing</li>
+            <li><b>"Uncomfortably relatable"</b> — you're the opposite (tested, committed, built)</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>My last book was Seneca's <em>On the Shortness of Life</em>. He argues that life is long enough — most people just waste it by never committing fully to anything, always jumping between things they never truly live. I found that uncomfortably relatable. It's part of why I've tried to make my decisions deliberately rather than drift into them.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q29 -->
+    <article class="q" id="q29">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">29</span>
+        <div class="q-text">
+          <h3>Describe yourself in 1 / 3 words</h3>
+          <div class="q-flow">1 word = anchor with proof · 3 words = trait cluster</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li><b>1 word: Systematic</b> → maps to elimination, 44% error catch, self-built tools</li>
+            <li><b>3 words: Deliberate, curious, dependable</b></li>
+            <li>If pushed — back each with one piece of evidence, don't just assert</li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>One word — systematic. It's how I eliminated specialties, how I caught a 44% inclusion error in my own research before it went out, and why I built my own learning tools instead of relying on what was handed to me.</p></div>
+          <div class="chunk"><p>Three words — deliberate, curious, dependable. Deliberate in how I make decisions, curious enough that I can't leave a gap unfilled, and dependable enough that the people I've worked with still keep in touch.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q30 -->
+    <article class="q" id="q30">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">30</span>
+        <div class="q-text">
+          <h3>If we called your reference, what would they say?</h3>
+          <div class="q-flow">What they'd say → Why it's consistent · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Reliable, took initiative without being asked</li>
+            <li>Showed up early, stayed late, asked questions above his level — to understand not impress</li>
+            <li><b>Honest about gaps, never bluffed, came back having fixed what he got wrong</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I think they'd say I was reliable and that I took initiative without being asked. The consultants I worked with saw someone who showed up early, stayed late, and asked questions sometimes above their level — not to impress, but because I genuinely needed to understand. I think they'd also say I was honest about what I didn't know — that I never bluffed — and that when I got something wrong, I came back having fixed it. That's the pattern I tried to be consistent about.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+
+    <!-- Q31 -->
+    <article class="q" id="q31">
+      <div class="q-top" onclick="toggleQ(this)">
+        <span class="q-num">31</span>
+        <div class="q-text">
+          <h3>Are you married? / Family vs work balance</h3>
+          <div class="q-flow">Honest → The position → No apology · Professional</div>
+        </div>
+        <span class="toggle">+</span>
+      </div>
+      <div class="q-body"><div class="q-body-inner"><div class="q-pad">
+        <div class="anchors">
+          <div class="block-label">Revision anchors</div>
+          <ul>
+            <li>Not married yet — <b>family is a genuine goal in the next few years</b></li>
+            <li><b>Not separate from career — both are responsibilities I chose</b></li>
+            <li>Won't delay life indefinitely → be organized enough for both. <b>"If they don't respect that, that's on them."</b></li>
+          </ul>
+        </div>
+        <div class="full">
+          <div class="block-label">Full spoken version</div>
+          <div class="chunk"><p>I'm not married yet — but building a family is a genuine goal of mine within the next few years. I don't see that as separate from my career. Both are responsibilities I've chosen, and I don't intend to come short in either. Residency will be demanding — I know that. But the answer isn't to delay life indefinitely. It's to be organized enough to handle both. That's a challenge I'm prepared for.</p></div>
+        </div>
+      </div></div></div>
+    </article>
+  </section>
+
+  <footer>
+    <p><b>31 answers · built from your own words · Samer Ghabashi · ORL–HNS SCFHS Jeddah.</b></p>
+    <p style="margin-top:8px">Banned: "mix of clinic and surgery" · leading with credentials · claiming traits instead of showing them · generic closing lines · anything that sounds like running from a specialty rather than being drawn to ENT.</p>
+    <p style="margin-top:8px">Still to build: clinical knowledge station (epistaxis, post-tonsillectomy bleed, audiogram/Rinne-Weber, peritonsillar abscess, button battery, CT sinus, tongue ulcer DDx, etc.), remaining ethics scenarios, and research-concept questions (levels of evidence, study designs, impact factor, p-value).</p>
+  </footer>
+
+</div>
+
+<div class="saved-flash" id="savedFlash">Downloaded — your edits are saved in the new file</div>
+<div class="savebar">
+  <span class="msg">You're in <b>edit mode</b>. Each answer is now <b>one single box</b> — click anywhere in it and write freely. When done, <b>download</b> to keep your changes — it saves a new copy of this file with your edits baked in.</span>
+  <button class="save-cancel" onclick="toggleEdit()">Done editing</button>
+  <button class="save-download" onclick="downloadEdited()">↓ Download my version</button>
+</div>
+
+<script>
+  function toggleQ(el){ el.parentElement.classList.toggle('open'); }
+  function toggleAll(open){
+    document.querySelectorAll('.q').forEach(q=>{
+      if(open) q.classList.add('open'); else q.classList.remove('open');
+    });
+  }
+  function setMode(mode){
+    const rev = mode==='revision';
+    document.body.classList.toggle('revision', rev);
+    document.getElementById('btnRev').classList.toggle('active', rev);
+    document.getElementById('btnFull').classList.toggle('active', !rev);
+    if(rev) toggleAll(true);
+  }
+  // smooth-scroll offset handled by scroll-margin-top; open target on click
+  document.querySelectorAll('nav.toc a').forEach(a=>{
+    a.addEventListener('click',()=>{
+      const id=a.getAttribute('href').slice(1);
+      const q=document.getElementById(id);
+      if(q) q.classList.add('open');
+    });
+  });
+
+  // ---- TOC PROGRESS CHECKBOXES ----
+  const LOCK_KEY = 'ent_locked_v1';
+
+  function loadLocks(){
+    let saved = {};
+    try { saved = JSON.parse(localStorage.getItem(LOCK_KEY) || '{}'); } catch(e){ saved = {}; }
+    document.querySelectorAll('.toc-check').forEach(cb=>{
+      cb.checked = saved[cb.dataset.q] === true;
+    });
+  }
+  function saveLocks(){
+    const saved = {};
+    document.querySelectorAll('.toc-check').forEach(cb=>{
+      if(cb.checked) saved[cb.dataset.q] = true;
+    });
+    try { localStorage.setItem(LOCK_KEY, JSON.stringify(saved)); } catch(e){}
+  }
+  function updateLockCount(){
+    const all = document.querySelectorAll('.toc-check');
+    const done = document.querySelectorAll('.toc-check:checked').length;
+    const el = document.getElementById('lockCount');
+    if(el) el.textContent = done + ' / ' + all.length + ' locked in';
+  }
+  function bindLocks(){
+    document.querySelectorAll('.toc-check').forEach(cb=>{
+      cb.addEventListener('click', e=> e.stopPropagation());
+      cb.addEventListener('change', ()=>{
+        saveLocks();
+        updateLockCount();
+      });
+    });
+  }
+
+  // ---- EDIT MODE ----
+  let editing = false;
+
+  // elements that become ONE editable box each (whole answer / whole anchor list)
+  function editableBlocks(){
+    return document.querySelectorAll('.full, .anchors ul');
+  }
+  // structural labels that should stay locked even inside an editable box
+  function lockedBits(){
+    return document.querySelectorAll('.full .block-label, .full .chunk-tag, .full .swap .ctr');
+  }
+
+  function setupEditable(){
+    editableBlocks().forEach(el=> el.setAttribute('contenteditable','false'));
+    // add an "edit badge" to each card title
+    document.querySelectorAll('article.q .q-text h3').forEach(h=>{
+      if(!h.querySelector('.edit-badge')){
+        const b=document.createElement('span');
+        b.className='edit-badge';
+        b.textContent='editable';
+        h.appendChild(b);
+      }
+    });
+  }
+
+  function toggleEdit(){
+    editing = !editing;
+    document.body.classList.toggle('editing', editing);
+    document.getElementById('btnEdit').classList.toggle('active', editing);
+    // one big editable box per answer + per anchor list
+    editableBlocks().forEach(el=> el.setAttribute('contenteditable', editing ? 'true' : 'false'));
+    // keep structural labels locked so they can't be deleted mid-flow
+    lockedBits().forEach(el=> el.setAttribute('contenteditable','false'));
+    if(editing){
+      setMode('full');           // editing needs full answers visible
+      toggleAll(true);           // open every card so nothing is hidden
+      window.scrollTo({top:0, behavior:'smooth'});
+    }
+  }
+
+  function downloadEdited(){
+    // clean a clone: strip edit-only UI and contenteditable flags so the saved file opens normal
+    const clone = document.documentElement.cloneNode(true);
+    clone.querySelectorAll('[contenteditable]').forEach(el=>el.removeAttribute('contenteditable'));
+    clone.querySelectorAll('.edit-badge, .saved-flash').forEach(el=>el.remove());
+    const body = clone.querySelector('body');
+    if(body) body.classList.remove('editing','revision');
+    // reset the active button states in the saved copy
+    clone.querySelectorAll('.btn').forEach(b=>b.classList.remove('active'));
+    const fullBtn = clone.querySelector('#btnFull');
+    if(fullBtn) fullBtn.classList.add('active');
+    // bake current lock-in state into the checkbox markup so the saved copy keeps it
+    const liveChecks = {};
+    document.querySelectorAll('.toc-check').forEach(cb=> liveChecks[cb.dataset.q] = cb.checked);
+    clone.querySelectorAll('.toc-check').forEach(cb=>{
+      if(liveChecks[cb.dataset.q]) cb.setAttribute('checked','');
+      else cb.removeAttribute('checked');
+    });
+
+    const html = '<!DOCTYPE html>\n' + clone.outerHTML
+      .replace(/\s*contenteditable="(?:true|false)"/g, '');
+    const blob = new Blob([html], {type:'text/html'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const date = new Date().toISOString().slice(0,10);
+    a.href = url;
+    a.download = `ent_study_guide_${date}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    const flash = document.getElementById('savedFlash');
+    flash.classList.add('show');
+    setTimeout(()=>flash.classList.remove('show'), 2600);
+  }
+
+  // warn before leaving while editing with unsaved intent
+  window.addEventListener('beforeunload', (e)=>{
+    if(editing){ e.preventDefault(); e.returnValue=''; }
+  });
+
+  setupEditable();
+  loadLocks();
+  bindLocks();
+  updateLockCount();
+</script>
+</body>
+</html>
