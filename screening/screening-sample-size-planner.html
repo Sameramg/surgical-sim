@@ -1,0 +1,375 @@
+<title>Screening Recall Feasibility</title>
+<style>
+:root{
+  --paper:#eef2f5; --surface:#ffffff; --surface-2:#f6f9fb;
+  --ink:#0d1a22; --ink-2:#37505d; --muted:#647c8a;
+  --rule:#d5e0e7; --rule-2:#e6edf2;
+  --accent:#0c6f79; --accent-soft:#dcedef;
+  --ok:#1c6b47; --ok-soft:#dceee5;
+  --warn:#8f5c0a; --warn-soft:#f7ecd8;
+  --bad:#993029; --bad-soft:#f7e2e0;
+  --shadow:0 1px 2px rgba(13,26,34,.06),0 6px 20px rgba(13,26,34,.05);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --paper:#0a1116; --surface:#111d24; --surface-2:#16242c;
+    --ink:#e4eef3; --ink-2:#b3c7d1; --muted:#8199a6;
+    --rule:#22343e; --rule-2:#1b2b33;
+    --accent:#4ab8bf; --accent-soft:#12313557;
+    --ok:#5fc394; --ok-soft:#122e2340;
+    --warn:#e0aa5c; --warn-soft:#33260f60;
+    --bad:#e8837a; --bad-soft:#3a1f1d60;
+    --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 24px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --paper:#0a1116; --surface:#111d24; --surface-2:#16242c;
+  --ink:#e4eef3; --ink-2:#b3c7d1; --muted:#8199a6;
+  --rule:#22343e; --rule-2:#1b2b33;
+  --accent:#4ab8bf; --accent-soft:#12313557;
+  --ok:#5fc394; --ok-soft:#122e2340;
+  --warn:#e0aa5c; --warn-soft:#33260f60;
+  --bad:#e8837a; --bad-soft:#3a1f1d60;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 6px 24px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{
+  margin:0; padding:0; background:var(--paper); color:var(--ink);
+  font-family:ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  font-size:15px; line-height:1.55; -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1080px;margin:0 auto;padding:34px 22px 80px}
+h1,h2,h3{font-family:ui-serif,Georgia,"Iowan Old Style",serif;font-weight:600;text-wrap:balance;margin:0}
+h1{font-size:31px;letter-spacing:-.015em;line-height:1.2}
+h2{font-size:19px;letter-spacing:-.01em}
+.eyebrow{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--accent);margin-bottom:9px}
+.lede{color:var(--ink-2);max-width:66ch;margin-top:11px;font-size:16px}
+header{border-bottom:1px solid var(--rule);padding-bottom:26px;margin-bottom:26px}
+section{margin-top:34px}
+.shead{display:flex;align-items:baseline;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.shead p{margin:0;color:var(--muted);font-size:13.5px}
+.card{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:20px;box-shadow:var(--shadow)}
+.num{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+
+/* controls */
+.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(178px,1fr));gap:17px}
+.ctl label{display:block;font-size:12px;font-weight:600;color:var(--ink-2);margin-bottom:5px}
+.ctl .hint{font-size:11.5px;color:var(--muted);margin-top:4px;line-height:1.4}
+.ctl input[type=range]{width:100%;accent-color:var(--accent);margin:2px 0}
+.ctl select,.ctl input[type=number]{
+  width:100%;padding:7px 9px;border:1px solid var(--rule);border-radius:6px;
+  background:var(--surface-2);color:var(--ink);font-size:14px;
+  font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;
+}
+.val{float:right;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:var(--accent);font-weight:600}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+
+/* verdict */
+.verdict{border-radius:9px;padding:21px 23px;border:1px solid;display:flex;gap:19px;align-items:flex-start}
+.verdict .mark{font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:99px;white-space:nowrap;font-weight:600}
+.v-bad{background:var(--bad-soft);border-color:var(--bad)}
+.v-bad .mark{background:var(--bad);color:var(--surface)}
+.v-warn{background:var(--warn-soft);border-color:var(--warn)}
+.v-warn .mark{background:var(--warn);color:var(--surface)}
+.v-ok{background:var(--ok-soft);border-color:var(--ok)}
+.v-ok .mark{background:var(--ok);color:var(--surface)}
+.verdict h2{font-size:18px;margin-bottom:6px}
+.verdict p{margin:0;font-size:14px;color:var(--ink-2);max-width:70ch}
+
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(158px,1fr));gap:13px}
+.tile{background:var(--surface);border:1px solid var(--rule);border-radius:9px;padding:14px 16px;border-top:3px solid var(--accent)}
+.tile .k{font-size:11px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);font-family:ui-monospace,monospace}
+.tile .v{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums;font-size:26px;font-weight:600;line-height:1.25;margin-top:3px;letter-spacing:-.02em}
+.tile .s{font-size:12px;color:var(--muted);margin-top:2px}
+.tile.t-bad{border-top-color:var(--bad)} .tile.t-bad .v{color:var(--bad)}
+.tile.t-ok{border-top-color:var(--ok)} .tile.t-ok .v{color:var(--ok)}
+.tile.t-warn{border-top-color:var(--warn)} .tile.t-warn .v{color:var(--warn)}
+
+/* tables */
+.scroll{overflow-x:auto;border:1px solid var(--rule);border-radius:9px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:520px}
+th,td{padding:9px 14px;text-align:right;border-bottom:1px solid var(--rule-2);white-space:nowrap}
+th:first-child,td:first-child{text-align:left}
+thead th{background:var(--surface-2);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);font-weight:600;font-family:ui-monospace,monospace;border-bottom:1px solid var(--rule)}
+tbody td{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-variant-numeric:tabular-nums}
+tbody tr:last-child td{border-bottom:0}
+tr.hit{background:var(--ok-soft)}
+tr.hit td{font-weight:700;color:var(--ok)}
+tr.hit td:first-child{box-shadow:inset 3px 0 0 var(--ok)}
+tr.dim td{color:var(--muted)}
+.bar{display:inline-block;height:7px;border-radius:2px;background:var(--accent);opacity:.65;vertical-align:middle}
+
+/* prose */
+.prose p{margin:0 0 11px;max-width:68ch;color:var(--ink-2);font-size:14.5px}
+.prose p:last-child{margin-bottom:0}
+.prose strong{color:var(--ink)}
+.eq{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;background:var(--surface-2);border-left:3px solid var(--accent);padding:12px 15px;border-radius:0 6px 6px 0;margin:13px 0;overflow-x:auto;color:var(--ink)}
+ol.steps{margin:0;padding-left:0;list-style:none;counter-reset:s;display:grid;gap:11px}
+ol.steps li{counter-increment:s;padding-left:38px;position:relative;font-size:14.5px;color:var(--ink-2);max-width:68ch}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:1px;width:25px;height:25px;border-radius:50%;background:var(--accent-soft);color:var(--accent);font-family:ui-monospace,monospace;font-size:12px;font-weight:700;display:flex;align-items:center;justify-content:center;border:1px solid var(--accent)}
+ol.steps li strong{color:var(--ink)}
+.note{font-size:12.5px;color:var(--muted);border-top:1px solid var(--rule);padding-top:15px;margin-top:15px;max-width:74ch}
+.note code{font-family:ui-monospace,monospace;background:var(--surface-2);padding:1px 5px;border-radius:3px;font-size:12px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+@media(max-width:760px){.split{grid-template-columns:1fr}.verdict{flex-direction:column;gap:12px}h1{font-size:25px}}
+</style>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Sample-size planning · AI-assisted title/abstract screening</div>
+  <h1>How many titles must you read before the AI can be trusted alone?</h1>
+  <p class="lede">For most systematic reviews the honest answer is <em>more than the review contains</em>. Included studies are the currency of a recall estimate, and a 3,000-record review holds only a few dozen. Set your parameters and see exactly where the ceiling falls.</p>
+</header>
+
+<section>
+  <div class="shead"><h2>Your review</h2><p>Defaults are this project's own figures: 1,376 records → 273 advanced → 21 included.</p></div>
+  <div class="card controls">
+    <div class="ctl">
+      <label for="corpus">Records to screen <span class="val" id="corpus-v">3,000</span></label>
+      <input type="range" id="corpus" min="500" max="20000" step="100" value="3000">
+      <div class="hint">Title/abstracts in the search yield.</div>
+    </div>
+    <div class="ctl">
+      <label for="prev">Final include rate <span class="val" id="prev-v">1.5%</span></label>
+      <input type="range" id="prev" min="2" max="120" step="1" value="15">
+      <div class="hint">Share ultimately included at full text. This review: 1.5%.</div>
+    </div>
+    <div class="ctl">
+      <label for="rej">AI rejects <span class="val" id="rej-v">65%</span></label>
+      <input type="range" id="rej" min="10" max="90" step="1" value="65">
+      <div class="hint">Share the AI screens out. Bigger pile = more to audit.</div>
+    </div>
+    <div class="ctl">
+      <label for="target">Recall you want to claim</label>
+      <select id="target">
+        <option value="0.80">≥ 80%</option>
+        <option value="0.90">≥ 90%</option>
+        <option value="0.95" selected>≥ 95%</option>
+        <option value="0.97">≥ 97%</option>
+        <option value="0.99">≥ 99%</option>
+      </select>
+      <div class="hint">As a lower confidence bound, not a point estimate.</div>
+    </div>
+    <div class="ctl">
+      <label for="alpha">Confidence</label>
+      <select id="alpha">
+        <option value="0.025" selected>95% CI (two-sided)</option>
+        <option value="0.05">95% one-sided</option>
+        <option value="0.005">99% CI (two-sided)</option>
+      </select>
+      <div class="hint">Two-sided is what journals expect.</div>
+    </div>
+  </div>
+</section>
+
+<section><div id="verdict"></div></section>
+
+<section>
+  <div class="tiles" id="tiles"></div>
+</section>
+
+<section>
+  <div class="shead"><h2>Claim 1 — is <em>this review</em> complete?</h2><p>Sample only what the AI threw away. Finite-population, so the bound is reachable.</p></div>
+  <div class="prose" style="margin-bottom:14px">
+    <p>A random sample of the whole corpus is nearly worthless: at a 1.5% include rate, 300 random records contain about 4 included studies, and 4-for-4 proves only that recall exceeds 40%. Every included study the AI <em>correctly</em> advanced tells you nothing you didn't already know. The information lives entirely in the pile the AI rejected — so sample there, and count how many included studies are hiding in it.</p>
+  </div>
+  <div class="scroll"><table>
+    <thead><tr><th>Hand-screen from reject pile</th><th>Share of pile</th><th>Share of corpus</th><th>Hidden includes (95% max)</th><th>Recall at least</th></tr></thead>
+    <tbody id="audit"></tbody>
+  </table></div>
+  <p class="note">Assumes you find <strong>zero</strong> included studies in the sample — the most favourable outcome possible. Find one and every row degrades. Bound is the exact hypergeometric upper limit on remaining includes.</p>
+</section>
+
+<section>
+  <div class="shead"><h2>Claim 2 — is <em>the screener</em> accurate?</h2><p>A statement about the tool, which must generalise beyond this corpus. Far more expensive.</p></div>
+  <div class="scroll"><table>
+    <thead><tr><th>Claim</th><th>0 missed</th><th>1 missed</th><th>2 missed</th><th>3 missed</th><th>Records at your include rate</th></tr></thead>
+    <tbody id="sizing"></tbody>
+  </table></div>
+  <p class="note">Exact Clopper–Pearson. Precision is governed by the number of <strong>included studies</strong> seen, never by records screened — which is why prevalence dominates every result on this page.</p>
+</section>
+
+<section>
+  <div class="shead"><h2>What actually improves with screening</h2><p>The model does not learn. The rubric does.</p></div>
+  <div class="split">
+    <div class="card prose">
+      <p>Nothing in a zero-shot screener updates from the records it has seen — run it on record 3,000 and it behaves exactly as it did on record 1. There is no learning curve to wait out.</p>
+      <p>What improves is the <strong>rubric</strong>, and only through a human noticing a systematic error and writing a rule against it. This project's own instruction — <em>never exclude because duration is not mentioned; duration is often only in a baseline table</em> — exists because someone saw that failure happen. That is the entire mechanism.</p>
+      <p>So the useful early question is not "when is it accurate?" but <strong>"how many included studies must I lay eyes on before a blind spot shows itself?"</strong></p>
+    </div>
+    <div class="card">
+      <div class="eyebrow" style="margin-bottom:11px">Blind-spot detection</div>
+      <div class="scroll" style="border:0"><table style="min-width:0">
+        <thead><tr><th>Affects</th><th>Includes to see</th><th>≈ titles read</th></tr></thead>
+        <tbody id="burn"></tbody>
+      </table></div>
+      <p class="note" style="margin-top:13px">Chance of catching it at least once: 95%. Read the AI's <em>advance</em> pile, not the corpus — includes concentrate there, so the same insight costs a fraction of the reading.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><h2>Why the union rule dissolves the question</h2></div>
+  <div class="card prose">
+    <p>Run the AI as a second screener alongside a human, and advance a record if <strong>either</strong> advances it. Then:</p>
+    <div class="eq">recall(union) = P(human advances <b>or</b> AI advances) ≥ P(human advances) = recall(human alone)</div>
+    <p>This is an identity, not an estimate. It holds if the AI's recall is 100% and it holds if the AI's recall is zero, because a union can only add records, never remove them. <strong>The number of titles you must screen before it is safe to add the AI is zero.</strong></p>
+    <p>Validation is therefore not a safety gate — it never was. It answers one narrower question: <em>may I now stop paying a human to screen?</em> And the tables above price that permission at a large fraction of the corpus, which is precisely the work the AI was meant to save. For a review of this size the two goals are in direct conflict, and the union rule is the resolution rather than the compromise.</p>
+  </div>
+</section>
+
+<section>
+  <div class="shead"><h2>What to do on a new 3,000-record review</h2></div>
+  <ol class="steps">
+    <li><strong>Calibrate before you count.</strong> Screen the first 150–200 records both ways and read every disagreement. You are hunting for rules to add to the rubric, not computing a recall figure — the sample is far too small for one, and treating it as evidence of accuracy is the main way this goes wrong.</li>
+    <li><strong>Freeze the rubric, then version it.</strong> Once edits stop changing decisions, fix the wording and record the model ID and date. Any later change invalidates everything measured before it.</li>
+    <li><strong>Run the union rule across the full corpus.</strong> One human, one AI, advance on either. Recall is guaranteed no worse than the human alone, so no validation is owed before you start.</li>
+    <li><strong>Audit the reject pile continuously.</strong> Sample from what both screeners dropped and bank the reads against the table above. This is the only sampling that buys statistical power.</li>
+    <li><strong>Report the bound you actually reached.</strong> Give the lower confidence limit and the number of included studies it rests on. A recall of "100%" on 28 studies is a claim of roughly 88% — state it that way and the method survives peer review.</li>
+  </ol>
+</section>
+
+<footer class="note" style="margin-top:44px">
+  Exact methods — Clopper–Pearson for recall bounds; hypergeometric for the finite reject pile; <code>1−(1−f)ⁿ</code> for blind-spot detection. Prevalence defaults from this review's audit trail (1,376 screened → 273 advanced → 21 included at full text; 3 further studies added later). Recall bounds describe the screener only and assume the sample is drawn at random from the stated pile.
+</footer>
+</div>
+
+<script>
+const $=id=>document.getElementById(id);
+const LG=[0.99999999999980993,676.5203681218851,-1259.1392167224028,771.32342877765313,
+          -176.61502916214059,12.507343278686905,-0.13857109526572012,
+          9.9843695780195716e-6,1.5056327351493116e-7];
+function lgamma(x){
+  if(x<0.5) return Math.log(Math.PI/Math.sin(Math.PI*x))-lgamma(1-x);
+  x-=1; let a=LG[0]; const t=x+7+0.5;
+  for(let i=1;i<9;i++) a+=LG[i]/(x+i);
+  return 0.5*Math.log(2*Math.PI)+(x+0.5)*Math.log(t)-t+Math.log(a);
+}
+const lchoose=(n,k)=>(k<0||k>n||n<0)?-Infinity:lgamma(n+1)-lgamma(k+1)-lgamma(n-k+1);
+
+function binomSf(k,n,p){ // P(X >= k)
+  if(k<=0) return 1; if(k>n) return 0; if(p<=0) return 0; if(p>=1) return 1;
+  let lo=0;
+  for(let i=0;i<k;i++) lo+=Math.exp(lchoose(n,i)+i*Math.log(p)+(n-i)*Math.log1p(-p));
+  return Math.max(0,1-lo);
+}
+function cpLower(k,n,alpha){
+  if(k<=0) return 0;
+  if(k===n) return Math.pow(alpha,1/n);
+  let lo=0,hi=1;
+  for(let i=0;i<60;i++){const m=(lo+hi)/2; if(binomSf(k,n,m)<alpha) lo=m; else hi=m;}
+  return (lo+hi)/2;
+}
+function positivesNeeded(target,misses,alpha){
+  let hi=misses+1;
+  while(hi<400000 && cpLower(hi-misses,hi,alpha)<target) hi*=2;
+  if(hi>=400000) return null;
+  let lo=misses+1;
+  while(lo<hi){const m=Math.floor((lo+hi)/2); if(cpLower(m-misses,m,alpha)>=target) hi=m; else lo=m+1;}
+  return lo;
+}
+const hyperP0=(E,K,m)=>(K<0||K>E||m>E||E-K<m)?0:Math.exp(lchoose(E-K,m)-lchoose(E,m));
+function kUpper(E,m,alpha){let K=0; while(K<=E&&hyperP0(E,K,m)>=alpha)K++; return Math.max(0,K-1);}
+
+const fmt=n=>n.toLocaleString("en-US");
+const pct=(x,d=1)=>x.toFixed(d)+"%";
+
+function render(){
+  const corpus=+$("corpus").value;
+  const prev=+$("prev").value/1000;
+  const rejF=+$("rej").value/100;
+  const target=+$("target").value;
+  const alpha=+$("alpha").value;
+
+  $("corpus-v").textContent=fmt(corpus);
+  $("prev-v").textContent=(prev*100).toFixed(1)+"%";
+  $("rej-v").textContent=(rejF*100).toFixed(0)+"%";
+
+  const totalInc=Math.max(1,Math.round(corpus*prev));
+  const pile=Math.max(1,Math.round(corpus*rejF));
+  const ceiling=cpLower(totalInc,totalInc,alpha);        // perfect AI, every record screened
+  const need=positivesNeeded(target,0,alpha);            // includes needed for the claim
+  const feasible=ceiling>=target;
+
+  // smallest reject-pile sample reaching the target (0 includes found)
+  let mNeed=null;
+  {
+    let lo=1,hi=pile;
+    while(lo<hi){
+      const mid=Math.floor((lo+hi)/2);
+      const r=totalInc/(totalInc+kUpper(pile,mid,0.05));
+      if(r>=target) hi=mid; else lo=mid+1;
+    }
+    if(totalInc/(totalInc+kUpper(pile,lo,0.05))>=target) mNeed=lo;
+  }
+
+  /* ---- verdict ----
+     Two distinct claims, deliberately reported separately:
+       (a) completeness of THIS review  -> finite-population, hypergeometric, mNeed reads
+       (b) recall of the SCREENER as a tool -> Clopper-Pearson, capped by `ceiling`  */
+  const share=mNeed?mNeed/corpus:1;
+  let cls,mark,head;
+  if(!mNeed||share>0.55){cls="v-bad";mark="Not worth it";}
+  else if(share>0.25){cls="v-warn";mark="Costly";}
+  else {cls="v-ok";mark="Workable";}
+  const tp=(target*100).toFixed(0);
+  head=mNeed
+    ? `Hand-screen ${fmt(mNeed)} of the ${fmt(pile)} rejected records to show this review is ≥${tp}% complete.`
+    : `Even reading the entire reject pile will not establish ≥${tp}% completeness.`;
+  const body=`
+    <p><b>For this review.</b> ${mNeed?`Sampling <b>${fmt(mNeed)}</b> records from the reject pile — <b>${(share*100).toFixed(0)}%</b> of your corpus — and finding <b>zero</b> included studies among them bounds the studies you missed at ${fmt(kUpper(pile,mNeed,0.05))}, giving recall ≥${tp}% for this corpus. Find a single included study and the guarantee collapses.`:`The pile is too large relative to ${fmt(totalInc)} included studies.`}</p>
+    <p style="margin-top:9px"><b>For the screener as a tool.</b> This is the harder claim, and it is capped by how few included studies exist: a ≥${tp}% bound needs <b>${fmt(need)}</b> of them, your whole corpus holds about <b>${fmt(totalInc)}</b>. Screen all ${fmt(corpus)} records, find the AI missed nothing, and the strongest publishable statement is still <b>recall ≥ ${pct(ceiling*100)}</b>${feasible?"":` — short of ${tp}%, and unreachable at any sample size`}.</p>`;
+  $("verdict").innerHTML=`<div class="verdict ${cls}"><span class="mark">${mark}</span>
+    <div><h2>${head}</h2>${body}</div></div>`;
+
+  /* ---- tiles ---- */
+  const tiles=[
+    ["Included studies","expected in the corpus",fmt(totalInc),""],
+    ["Reject pile","records the AI drops",fmt(pile),""],
+    ["Reads for claim 1",`this review ≥${(target*100).toFixed(0)}% complete`,mNeed?fmt(mNeed):"—",mNeed?(mNeed/corpus>0.55?"t-bad":mNeed/corpus>0.25?"t-warn":"t-ok"):"t-bad"],
+    ["Includes for claim 2",`vs ${fmt(totalInc)} available`,fmt(need),need>totalInc?"t-bad":"t-ok"],
+    ["Screener ceiling","best claim 2 ever possible",pct(ceiling*100),feasible?"t-ok":"t-bad"]
+  ];
+  $("tiles").innerHTML=tiles.map(([k,s,v,c])=>
+    `<div class="tile ${c}"><div class="k">${k}</div><div class="v">${v}</div><div class="s">${s}</div></div>`).join("");
+
+  /* ---- audit table ---- */
+  const steps=[...new Set([25,50,100,200,300,400,600,800,1000,1300,1600,2000,2500,3000]
+    .map(v=>Math.min(v,pile)).filter(v=>v<=pile))].sort((a,b)=>a-b);
+  if(!steps.includes(pile)) steps.push(pile);
+  let firstHit=false;
+  $("audit").innerHTML=steps.map(m=>{
+    const ku=kUpper(pile,m,0.05);
+    const r=totalInc/(totalInc+ku)*100;
+    const hit=!firstHit&&r>=target*100; if(hit) firstHit=true;
+    return `<tr class="${hit?"hit":(r<target*100?"dim":"")}">
+      <td>${fmt(m)}</td><td>${(m/pile*100).toFixed(0)}%</td><td>${(m/corpus*100).toFixed(0)}%</td>
+      <td>${fmt(ku)}</td>
+      <td>${r.toFixed(1)}% <span class="bar" style="width:${Math.max(1,r*0.38)}px"></span></td></tr>`;
+  }).join("");
+
+  /* ---- sizing table ---- */
+  $("sizing").innerHTML=[0.80,0.90,0.95,0.97,0.99].map(t=>{
+    const row=[0,1,2,3].map(mi=>positivesNeeded(t,mi,alpha));
+    const recs=row[0]/prev;
+    const over=row[0]>totalInc;
+    return `<tr class="${Math.abs(t-target)<1e-9?"hit":""}">
+      <td>≥ ${(t*100).toFixed(0)}%</td>
+      ${row.map(v=>`<td>${fmt(v)}</td>`).join("")}
+      <td>${over?"exceeds corpus":fmt(Math.ceil(recs))}</td></tr>`;
+  }).join("");
+
+  /* ---- blind spot ---- */
+  const advRate=Math.min(0.95,Math.max(prev, prev/Math.max(0.05,1-rejF)));
+  $("burn").innerHTML=[0.50,0.30,0.20,0.10,0.05].map(f=>{
+    const n=Math.ceil(Math.log(0.05)/Math.log(1-f));
+    return `<tr><td>${(f*100).toFixed(0)}% of includes</td><td>${n}</td><td>${fmt(Math.ceil(n/advRate))}</td></tr>`;
+  }).join("");
+}
+["corpus","prev","rej","target","alpha"].forEach(id=>{
+  $(id).addEventListener("input",render);
+  $(id).addEventListener("change",render);
+});
+render();
+</script>
